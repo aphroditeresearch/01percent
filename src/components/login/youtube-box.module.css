@@ -1,20 +1,19 @@
 /* Self-contained non-interactivity handling for YouTubeBox, decoupled from
    whatever sizing/positioning class the caller passes via `className`.
 
-   `controls=0` on the embed URL only hides the YouTube-drawn scrubber —
-   some browsers (Safari in particular) still draw their own native
-   play/pause/skip "glass" media controls on hover over the underlying
-   cross-origin <video> element, which lives inside the iframe's document
-   and can't be reached or restyled from here. `pointer-events: none` on
-   the iframe itself is not reliable protection against that, because the
-   browser's hover-detection isn't a JS mouse-event listener on our page —
-   it's chrome-level video affordance tied to the element existing at all.
+   Two layers of defence against the browser drawing its own native
+   play/pause/skip "glass" media controls over the clip (see youtube-box.tsx
+   for why a plain `?autoplay=1&controls=0` iframe isn't enough on its own):
 
-   Fix: a transparent guard pane stacked ON TOP of the iframe (higher
-   z-index, `pointer-events: auto`, no handlers). It simply absorbs every
-   mouse/hover event before it ever reaches the iframe, so the browser
-   never considers the cursor "over" the video and never shows its
-   controls. Standard trick for "YouTube as background video." */
+   1. youtube-box.tsx trims the generated iframe's `allow` attribute down to
+      just `autoplay`, which should remove the browser's standing
+      permission to treat this as a native-control-eligible playing video
+      in the first place.
+   2. Belt and suspenders: `.guard` is a transparent pane stacked ON TOP of
+      the iframe (explicit z-index above everything else in this box,
+      `pointer-events: auto`, no handlers). It absorbs every mouse/hover
+      event before it ever reaches the iframe's document, so nothing in
+      that document can ever register the cursor as "over" the video. */
 .wrap {
   position: relative;
   width: 100%;
@@ -36,7 +35,7 @@
 .guard {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 5;
   /* Intentionally no handlers — presence alone intercepts hover/click
      before it reaches the iframe underneath. */
   pointer-events: auto;
