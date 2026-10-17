@@ -177,7 +177,6 @@
   opacity: 0.55;
 }
 
-/* Two offset copies of the same clip, crossfaded near the loop seam. */
 .ambientVideoLayer {
   position: absolute;
   inset: 0;
@@ -337,8 +336,9 @@
   width: 100%;
   max-width: 26rem;
   border: 1px solid rgb(255 255 255 / 0.1);
-  background: rgb(10 11 14 / 0.6);
-  backdrop-filter: blur(14px);
+  /* Solid-ish (not backdrop-filter: blur) so the card doesn't continuously
+     re-blur the playing video behind it every frame. */
+  background: rgb(10 11 14 / 0.88);
   padding: 2rem 1.5rem;
 }
 @media (min-width: 768px) {

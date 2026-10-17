@@ -45,6 +45,12 @@
   server actions in `src/app/login/actions.ts`) now redirects to `/login` until "Continue with
   Discord" is clicked, and "Log out" actually clears it. Not real auth — flagged as such in code,
   same as the rest of the demo session.
+- Fixed lag/motion-blur on the cinematic login: the sign-in panel used
+  `backdrop-filter: blur(14px)` over the playing ambient video, re-blurring it every frame — now a
+  solid-ish background instead. The ambient clip also played as two simultaneous full-resolution
+  copies crossfaded to mask its loop seam; replaced with a single `<video loop>`
+  (`ambient-video.tsx`, no client JS), trading a slightly visible loop cut for materially less
+  decode cost and no double-exposure ghosting during playback.
 
 ## ▶ Phase 1 — Source control and first deploy (next)
 

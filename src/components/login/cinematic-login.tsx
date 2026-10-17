@@ -5,7 +5,7 @@ import { burstLines } from "@/lib/burst";
 import { cn } from "@/lib/cn";
 import { isHexColor } from "@/lib/theme";
 import { AmbientAudio } from "./ambient-audio";
-import { AmbientLoopVideo } from "./ambient-loop-video";
+import { AmbientVideo } from "./ambient-video";
 import s from "./cinematic.module.css";
 
 type Cinematic = Extract<LoginConfig, { style: "cinematic" }>;
@@ -32,7 +32,7 @@ function LoginIcon() {
 }
 
 function Backdrop({ src, poster }: { src?: string; poster?: string }) {
-  return src ? <AmbientLoopVideo src={src} poster={poster} /> : <div className={s.ambientFallback} aria-hidden />;
+  return src ? <AmbientVideo src={src} poster={poster} /> : <div className={s.ambientFallback} aria-hidden />;
 }
 
 export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login: Cinematic }) {
