@@ -19,7 +19,7 @@ export const tempo: TenantConfig = {
     ink: "#f2f1ee",
     muted: "#8b8d94",
     line: "#2a2d34",
-    accent: "#ff4d2e",
+    accent: "#ff3b5c",
     success: "#5bd68a",
     displayFont: "archivoWide",
     bodyFont: "plex",
@@ -31,7 +31,7 @@ export const tempo: TenantConfig = {
     heroWord: "JAPAN",
     heroKana: "日本",
     introSubtitle: "Mentorship",
-    streakColor: "#4da3ff",
+    streakColor: "#ff8aa8",
     video: { ambient: "/tenants/tempo/bg.mp4", hero: "/tenants/tempo/bg.mp4" },
   },
   features: {
