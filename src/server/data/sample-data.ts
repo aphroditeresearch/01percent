@@ -22,6 +22,7 @@ import type {
 const M = "tnt_meridian";
 const N = "tnt_northform";
 const T = "tnt_tempo";
+const O = "tnt_onepercent";
 
 export const sampleViewers: Viewer[] = [
   {
@@ -49,6 +50,16 @@ export const sampleViewers: Viewer[] = [
     tenantId: T,
     name: "Jordan Park",
     email: "jordan@example.com",
+    role: "student",
+    tierName: "Inner Circle",
+    accessStatus: "active",
+    memberSince: "2026-09-01",
+  },
+  {
+    id: "usr_demo_o",
+    tenantId: O,
+    name: "Taylor Chen",
+    email: "taylor@example.com",
     role: "student",
     tierName: "Inner Circle",
     accessStatus: "active",
@@ -105,6 +116,24 @@ export const sampleCourses: Course[] = [
   {
     id: "crs_t_recaps",
     tenantId: T,
+    slug: "recaps",
+    title: "Recaps",
+    description: "Placeholder course — real content goes here.",
+    position: 2,
+    unlockMode: "open",
+  },
+  {
+    id: "crs_o_core",
+    tenantId: O,
+    slug: "core",
+    title: "Lectures",
+    description: "Placeholder course — real content goes here.",
+    position: 1,
+    unlockMode: "sequential",
+  },
+  {
+    id: "crs_o_recaps",
+    tenantId: O,
     slug: "recaps",
     title: "Recaps",
     description: "Placeholder course — real content goes here.",
@@ -206,6 +235,26 @@ export const sampleLessons: Lesson[] = [
       52 + ((i * 5) % 25),
     ]),
   ),
+  ...lessonsFor(
+    O,
+    "crs_o_core",
+    "onepct",
+    Array.from({ length: 6 }, (_, i): [string, string, number] => [
+      `Lecture ${String(i + 1).padStart(2, "0")}`,
+      "Placeholder lecture — real content goes here.",
+      30 + ((i * 11) % 40),
+    ]),
+  ),
+  ...lessonsFor(
+    O,
+    "crs_o_recaps",
+    "onepctrecap",
+    Array.from({ length: 8 }, (_, i): [string, string, number] => [
+      `Recap ${String(i + 1).padStart(2, "0")}`,
+      "Placeholder recap — real content goes here.",
+      52 + ((i * 5) % 25),
+    ]),
+  ),
 ];
 
 /** Lesson ids each demo viewer has completed. */
@@ -216,6 +265,7 @@ export const sampleCompletions: Record<string, string[]> = {
   ],
   usr_demo_n: ["base_01", "base_02", "base_03", "mob_01", "mob_02"],
   usr_demo_t: ["tempo_01", "tempo_02", "tempo_03", "recap_01", "recap_02"],
+  usr_demo_o: ["onepct_01", "onepct_02", "onepct_03", "onepctrecap_01", "onepctrecap_02"],
 };
 
 /** Most recently opened lessons, newest first. */
@@ -223,6 +273,7 @@ export const sampleRecent: Record<string, string[]> = {
   usr_demo_m: ["core_05", "review_10", "core_04"],
   usr_demo_n: ["base_04", "mob_02"],
   usr_demo_t: ["tempo_04", "recap_02", "tempo_03"],
+  usr_demo_o: ["onepct_04", "onepctrecap_02", "onepct_03"],
 };
 
 /** Consecutive days with at least one lesson opened, up to and including today. */
@@ -230,6 +281,7 @@ export const sampleStreaks: Record<string, number> = {
   usr_demo_m: 5,
   usr_demo_n: 2,
   usr_demo_t: 3,
+  usr_demo_o: 4,
 };
 
 export const sampleAssignments: Assignment[] = [
@@ -238,6 +290,15 @@ export const sampleAssignments: Assignment[] = [
     tenantId: T,
     courseId: "crs_t_core",
     lessonId: "tempo_02",
+    title: "Placeholder assignment",
+    prompt: "Real assignment text goes here.",
+    dueAt: null,
+  },
+  {
+    id: "asg_o_1",
+    tenantId: O,
+    courseId: "crs_o_core",
+    lessonId: "onepct_02",
     title: "Placeholder assignment",
     prompt: "Real assignment text goes here.",
     dueAt: null,
@@ -272,6 +333,15 @@ export const sampleAssignments: Assignment[] = [
 ];
 
 export const sampleSubmissions: Submission[] = [
+  {
+    id: "sub_o_1",
+    tenantId: O,
+    assignmentId: "asg_o_1",
+    userId: "usr_demo_o",
+    status: "revision",
+    submittedAt: "2026-10-08",
+    feedback: "Placeholder feedback — real feedback goes here.",
+  },
   {
     id: "sub_t_1",
     tenantId: T,
@@ -329,6 +399,14 @@ export const sampleAnnouncements: Announcement[] = [
   {
     id: "ann_t_1",
     tenantId: T,
+    title: "Placeholder announcement",
+    body: "Real announcement text goes here.",
+    publishedAt: "2026-10-11",
+    pinned: true,
+  },
+  {
+    id: "ann_o_1",
+    tenantId: O,
     title: "Placeholder announcement",
     body: "Real announcement text goes here.",
     publishedAt: "2026-10-11",

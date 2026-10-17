@@ -113,6 +113,15 @@ export interface TenantConfig {
   memberLayout?: "header" | "sidebar";
   /** Member home page style. Omit for the default (see HomeConfig). */
   home?: HomeConfig;
+  /**
+   * Full-screen black intro that plays once (muted, autoplaying video)
+   * before the sign-in screen cross-fades in. Omit entirely for the
+   * classic behaviour — the login renders immediately, nothing changes.
+   * Independent of `login.style`: works the same whether the sign-in
+   * screen underneath is "editorial" or "cinematic". See
+   * `intro-video-gate.tsx`.
+   */
+  introVideo?: { src: string; poster?: string };
   features: Record<FeatureKey, boolean>;
   /** Mentor-chosen names for navigation items. */
   labels: {

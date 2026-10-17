@@ -1,0 +1,37 @@
+/*
+ * The pre-login intro: black full-bleed overlay, video centred and
+ * letterboxed (never cropped, never stretched). Fades out via opacity once
+ * the clip ends — see intro-video-gate.tsx for the `ended`-driven state.
+ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  opacity: 1;
+  transition: opacity 700ms ease;
+}
+
+.overlay[data-fading="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.video {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+}
+
+/* Same convention as the rest of the decorative/motion layers in this
+   codebase: skip it outright under reduced motion rather than show a fade. */
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    display: none;
+  }
+}
