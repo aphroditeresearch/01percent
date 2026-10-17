@@ -225,6 +225,13 @@ export const sampleRecent: Record<string, string[]> = {
   usr_demo_t: ["tempo_04", "recap_02", "tempo_03"],
 };
 
+/** Consecutive days with at least one lesson opened, up to and including today. */
+export const sampleStreaks: Record<string, number> = {
+  usr_demo_m: 5,
+  usr_demo_n: 2,
+  usr_demo_t: 3,
+};
+
 export const sampleAssignments: Assignment[] = [
   {
     id: "asg_t_1",

@@ -66,6 +66,14 @@
 - Removed Tempo's ambient audio (the YouTube-sourced background track on the cinematic login) by
   dropping its `ambientAudio` config. The `AmbientAudio` component and its `login.ambientAudio`
   config type stay in place, unused, in case a tenant wants it switched back on later.
+- New opt-in member home page style: `home: { style: "sakura", petalColor }` on a tenant (set for
+  Tempo) swaps the quiet resume page for a progress-forward dashboard — percent/lessons/modules
+  stat row, a streak card, a "Next up" continue card, and a per-module progress list — with a
+  seeded, CSS-only drifting cherry-blossom petal overlay (`src/lib/petals.ts`, same
+  deterministic-PRNG approach as the login's burst lines; hidden under reduced motion). Default
+  (omitted `home`) is unchanged for Meridian/Northform. Builds on the existing
+  `getCoursesWithProgress` data helper; added a small `sampleStreaks` record (demo-only, not real
+  tracking) surfaced as `streakDays` from `getDashboard`.
 
 ## ▶ Phase 1 — Source control and first deploy (next)
 

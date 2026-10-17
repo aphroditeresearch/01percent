@@ -75,6 +75,20 @@ export type LoginConfig =
       ambientAudio?: { youtubeId: string; startSeconds?: number };
     };
 
+/**
+ * How the member home page (dashboard) looks.
+ * - default (or omitted): the quiet resume/summary page.
+ * - sakura: a progress-forward dashboard (streak, modules, next-up card)
+ *   with a drifting cherry-blossom petal overlay — see sakura-dashboard.tsx.
+ */
+export type HomeConfig =
+  | { style: "default" }
+  | {
+      style: "sakura";
+      /** Petal colour, #rrggbb. Falls back to theme.accent if omitted. */
+      petalColor?: string;
+    };
+
 export interface TenantConfig {
   id: string;
   /** Subdomain on the platform root domain, e.g. "meridian" → meridian.<root> */
@@ -97,6 +111,8 @@ export interface TenantConfig {
    * more app-like feel — see sidebar-shell.tsx.
    */
   memberLayout?: "header" | "sidebar";
+  /** Member home page style. Omit for the default (see HomeConfig). */
+  home?: HomeConfig;
   features: Record<FeatureKey, boolean>;
   /** Mentor-chosen names for navigation items. */
   labels: {

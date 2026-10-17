@@ -21,6 +21,7 @@ import {
   sampleJournal,
   sampleLessons,
   sampleRecent,
+  sampleStreaks,
   sampleSubmissions,
 } from "./sample-data";
 
@@ -119,6 +120,8 @@ export async function getDashboard(tenant: TenantConfig, viewer: Viewer) {
       latest: journal[0] ?? null,
       streakDays: 0,
     },
+    /** Consecutive-day lesson-watching streak. Independent of the journal streak above. */
+    streakDays: sampleStreaks[viewer.id] ?? 0,
   };
 }
 

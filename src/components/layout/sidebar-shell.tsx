@@ -8,6 +8,39 @@ import { cn } from "@/lib/cn";
 import { SidebarNavLinks } from "./nav-links";
 
 /**
+ * The sidebar's brand lockup. For a cinematic-login tenant this reuses that
+ * screen's own hero word + kana (kana line on top, word below, same accent
+ * "sticker" extrusion) so the portal reads as a continuation of the login
+ * rather than a plain text link. Any other tenant just gets its wordmark —
+ * nothing here is hardcoded per client.
+ */
+function Wordmark({ tenant }: { tenant: TenantConfig }) {
+  const cinematic = tenant.login.style === "cinematic" ? tenant.login : null;
+  if (!cinematic) {
+    return (
+      <Link href="/" className="heading-display text-xl tracking-wide text-ink">
+        {tenant.wordmark}
+      </Link>
+    );
+  }
+  return (
+    <Link href="/" className="flex flex-col gap-1.5">
+      {cinematic.heroKana && (
+        <span className="label-caps text-[0.7rem] tracking-[0.35em] text-accent">{cinematic.heroKana}</span>
+      )}
+      <span
+        className="heading-display text-2xl text-ink"
+        style={{
+          textShadow: `0.02em 0.02em 0 ${tenant.theme.accent}, 0.04em 0.04em 0 ${tenant.theme.accent}`,
+        }}
+      >
+        {cinematic.heroWord}
+      </span>
+    </Link>
+  );
+}
+
+/**
  * Left-rail member shell: wordmark, vertical nav and sign-out, with the page
  * content filling the rest of the viewport. Opt-in per tenant via
  * `memberLayout: "sidebar"` (see tempo.ts) — SiteHeader/SiteFooter stay the
@@ -17,13 +50,13 @@ export function SidebarShell({ tenant, children }: { tenant: TenantConfig; child
   return (
     <div className="flex min-h-dvh flex-col md:flex-row">
       <aside className="relative shrink-0 overflow-hidden border-b border-line px-6 py-6 md:flex md:w-64 md:flex-col md:gap-10 md:border-b-0 md:border-r md:px-8 md:py-10">
-        {/* Soft accent bloom, decorative only — colour comes from the tenant's own accent token. */}
-        <div aria-hidden className="pointer-events-none absolute -top-16 -left-16 size-56 rounded-full bg-accent/15 blur-3xl" />
+        {/* Soft accent bloom behind the wordmark, decorative only — colour comes
+            from the tenant's own accent token, same red glow feel as the login's
+            ambient scene so the portal flows from it. */}
+        <div aria-hidden className="pointer-events-none absolute -top-20 -left-20 size-72 rounded-full bg-accent/25 blur-3xl" />
 
         <div className="relative flex items-center justify-between md:block">
-          <Link href="/" className="heading-display text-xl tracking-wide text-ink">
-            {tenant.wordmark}
-          </Link>
+          <Wordmark tenant={tenant} />
           <form action={leaveDemo} className="md:hidden">
             <button type="submit" className={cn(buttonStyles.outline, "px-4 py-2 text-xs")}>
               Log out

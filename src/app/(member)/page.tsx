@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { SakuraDashboard } from "@/components/dashboard/sakura-dashboard";
 import { DetailRow, Eyebrow, PageTitle } from "@/components/ui/primitives";
 import { isFeatureEnabled } from "@/lib/features";
 import { formatDate } from "@/lib/format";
-import { getDashboard } from "@/server/data";
+import { getCoursesWithProgress, getDashboard } from "@/server/data";
 import { getViewer } from "@/server/session";
 import { getTenant } from "@/server/tenant";
 
@@ -12,6 +13,22 @@ export default async function DashboardPage() {
   const data = await getDashboard(tenant, viewer);
   const { resume, progress } = data;
   const firstName = viewer.name.split(" ")[0];
+
+  // Opt-in per tenant (see tempo.ts) — every other tenant keeps the default
+  // resume/summary page below, untouched.
+  if (tenant.home?.style === "sakura") {
+    const modules = await getCoursesWithProgress(tenant, viewer);
+    return (
+      <SakuraDashboard
+        tenant={tenant}
+        firstName={firstName}
+        resume={resume}
+        progress={progress}
+        streakDays={data.streakDays}
+        modules={modules}
+      />
+    );
+  }
 
   return (
     <div className="space-y-20">

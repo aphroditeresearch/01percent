@@ -35,6 +35,7 @@ export const tempo: TenantConfig = {
     video: { ambient: "/tenants/tempo/bg.mp4" },
   },
   memberLayout: "sidebar",
+  home: { style: "sakura", petalColor: "#ff8aa8" },
   features: {
     courses: true,
     announcements: true,
