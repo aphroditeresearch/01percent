@@ -1,26 +1,80 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens. Tenant values arrive as --t-* custom properties on <html>
+ * (see src/lib/theme.ts). The fallbacks below are only used if a page renders
+ * without a tenant, e.g. the platform 404.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --t-bg: #f6f5f2;
+  --t-surface: #eeece7;
+  --t-ink: #111111;
+  --t-muted: #6b6a66;
+  --t-line: #dcdad4;
+  --t-accent: #c8321f;
+  --t-success: #2f6b3a;
+  --t-font-display: var(--font-anton);
+  --t-font-body: var(--font-inter);
+  --t-display-stretch: normal;
+  --t-display-weight: 400;
+  --t-heading-case: uppercase;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--t-bg);
+  --color-surface: var(--t-surface);
+  --color-ink: var(--t-ink);
+  --color-muted: var(--t-muted);
+  --color-line: var(--t-line);
+  --color-accent: var(--t-accent);
+  --color-success: var(--t-success);
+  --font-sans: var(--t-font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--t-font-display), var(--font-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Display headings follow the tenant's case preference. */
+  .heading-display {
+    font-family: var(--font-display);
+    font-stretch: var(--t-display-stretch);
+    font-weight: var(--t-display-weight);
+    text-transform: var(--t-heading-case);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+
+  /* Small uppercase labels: nav, eyebrows, statuses. */
+  .label-caps {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

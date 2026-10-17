@@ -1,0 +1,510 @@
+/*
+ * Cinematic login. Pure CSS animation, no client JavaScript.
+ * Timeline: 0–1.9s intro burst → shutters open → page elements stagger in.
+ * Colours come from tenant tokens (--t-*) plus --streak set on .root.
+ */
+
+.root {
+  --intro-end: 1.9s;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #000;
+  color: var(--t-ink);
+}
+
+/* ───────── Intro ───────── */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  animation: introOut 0.01s linear var(--intro-end) forwards;
+}
+
+.shutter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: #050506;
+  animation: 0.55s cubic-bezier(0.7, 0, 0.2, 1) 1.35s forwards;
+}
+.shutterTop {
+  top: 0;
+  animation-name: shutterUp;
+}
+.shutterBottom {
+  bottom: 0;
+  animation-name: shutterDown;
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.linesInner {
+  position: relative;
+  width: 0;
+  height: 0;
+  animation: burst 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, transparent, var(--t-ink) 35%, var(--t-ink));
+  border-radius: 999px;
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  background: var(--t-ink);
+  opacity: 0;
+  animation: flash 0.35s ease-out 0.12s;
+}
+.flashLate {
+  animation-delay: 1.3s;
+}
+
+.introTitle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  animation: titleIn 1.25s cubic-bezier(0.2, 0.9, 0.2, 1) 0.15s both;
+}
+
+.introWord {
+  font-family: var(--font-display);
+  font-stretch: var(--t-display-stretch);
+  font-weight: var(--t-display-weight);
+  font-size: clamp(4rem, 14vw, 11rem);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+}
+
+.introKana {
+  font-family: var(--font-dela), sans-serif;
+  font-size: clamp(1.25rem, 4vw, 2.5rem);
+  color: var(--t-accent);
+}
+
+.introSub {
+  position: absolute;
+  top: calc(50% + clamp(4.5rem, 12vw, 9rem));
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  color: var(--t-muted);
+  animation: fadeIn 0.6s ease 0.45s both;
+}
+
+.seam {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--t-ink);
+  transform: scaleX(0);
+  animation: seam 0.3s cubic-bezier(0.7, 0, 0.2, 1) 1.1s forwards, fadeOut 0.3s ease 1.5s forwards;
+}
+
+/* ───────── Ambient background ───────── */
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+
+.ambientVideo,
+.ambientFallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+}
+
+/* Stand-in when the tenant hasn't supplied a video: slow-moving coloured haze. */
+.ambientFallback {
+  opacity: 1;
+  background:
+    radial-gradient(40% 50% at 20% 30%, color-mix(in srgb, var(--streak) 28%, transparent), transparent 70%),
+    radial-gradient(35% 45% at 80% 70%, color-mix(in srgb, var(--t-accent) 22%, transparent), transparent 70%),
+    radial-gradient(60% 60% at 50% 50%, #15161b, #050506);
+  background-size: 160% 160%, 160% 160%, 100% 100%;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.2) 40%, rgb(0 0 0 / 0.75)),
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px);
+}
+
+/* Halftone dot corners. */
+.halftone {
+  position: absolute;
+  width: min(42vw, 520px);
+  aspect-ratio: 1;
+  background-image: radial-gradient(circle, rgb(255 255 255 / 0.22) 1.2px, transparent 1.6px);
+  background-size: 9px 9px;
+  opacity: 0.7;
+}
+.halftoneTopRight {
+  top: 0;
+  right: 0;
+  mask-image: radial-gradient(circle at 100% 0%, #000 0%, transparent 70%);
+}
+.halftoneBottomLeft {
+  bottom: 0;
+  left: 0;
+  mask-image: radial-gradient(circle at 0% 100%, #000 0%, transparent 70%);
+}
+
+.streak {
+  position: absolute;
+  width: 260px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--t-ink));
+  opacity: 0;
+  transform: rotate(-18deg);
+  animation: streak 9s linear infinite;
+}
+.streakBlue {
+  background: linear-gradient(90deg, transparent, var(--streak));
+}
+
+/* ───────── Page ───────── */
+
+.header {
+  padding: 1.5rem 1.25rem;
+}
+@media (min-width: 768px) {
+  .header {
+    padding: 1.75rem 2.5rem;
+  }
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-stretch: var(--t-display-stretch);
+  font-weight: var(--t-display-weight);
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: 1rem 1.25rem 3rem;
+}
+
+.mainInner {
+  display: grid;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  gap: 2.5rem;
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .mainInner {
+    grid-template-columns: 1.35fr 1fr;
+    gap: 4rem;
+  }
+}
+
+.heroArt {
+  position: relative;
+}
+
+.heroPanel {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  background: #08090b;
+  box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.9);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
+}
+@media (max-width: 899px) {
+  .heroPanel {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+.heroPanel video,
+.heroPanel .ambientFallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+.heroTitle {
+  position: absolute;
+  left: -0.04em;
+  bottom: -0.12em;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+
+.heroWord {
+  font-family: var(--font-display);
+  font-stretch: var(--t-display-stretch);
+  font-weight: var(--t-display-weight);
+  font-size: clamp(4rem, 12vw, 9.5rem);
+  line-height: 0.82;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.heroKana {
+  order: -1;
+  margin-left: 0.25em;
+  font-family: var(--font-dela), sans-serif;
+  font-size: clamp(1.25rem, 3vw, 2.25rem);
+  color: #fff;
+}
+
+.panel {
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(10 11 14 / 0.6);
+  backdrop-filter: blur(14px);
+  padding: 2rem 1.5rem;
+}
+@media (min-width: 768px) {
+  .panel {
+    padding: 2.75rem 2.5rem;
+  }
+}
+
+.signIn {
+  font-family: var(--font-display);
+  font-stretch: var(--t-display-stretch);
+  font-weight: var(--t-display-weight);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.muted {
+  margin-top: 0.75rem;
+  color: var(--t-muted);
+  line-height: 1.6;
+}
+
+.button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  background: var(--t-ink);
+  color: #000;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease;
+}
+.button:hover {
+  background: var(--t-accent);
+  color: #fff;
+}
+.button:active {
+  transform: translateY(1px);
+}
+
+.demoNote {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--t-muted);
+}
+
+.footer {
+  padding: 0 1.25rem 1.5rem;
+  font-size: 0.7rem;
+  color: var(--t-muted);
+  text-align: center;
+}
+
+/* Staggered entrance after the intro. */
+.e1,
+.e2,
+.e3,
+.e4 {
+  animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.e1 {
+  animation-delay: calc(var(--intro-end) - 0.2s);
+}
+.e2 {
+  animation-delay: calc(var(--intro-end) + 0.05s);
+}
+.e3 {
+  animation-delay: calc(var(--intro-end) - 0.1s);
+}
+.e4 {
+  animation-delay: calc(var(--intro-end) + 0.2s);
+}
+
+/* ───────── Keyframes ───────── */
+
+@keyframes introOut {
+  to {
+    visibility: hidden;
+  }
+}
+@keyframes shutterUp {
+  to {
+    transform: translateY(-101%);
+  }
+}
+@keyframes shutterDown {
+  to {
+    transform: translateY(101%);
+  }
+}
+@keyframes burst {
+  0% {
+    transform: scale(0.15) rotate(-6deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.25) rotate(0deg);
+    opacity: 0;
+  }
+}
+@keyframes flash {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes titleIn {
+  0% {
+    transform: scale(1.6);
+    opacity: 0;
+    filter: blur(8px);
+  }
+  30% {
+    transform: scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes seam {
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes drift {
+  from {
+    background-position: 0% 0%, 100% 100%, 0 0;
+  }
+  to {
+    background-position: 100% 60%, 0% 30%, 0 0;
+  }
+}
+@keyframes streak {
+  0% {
+    opacity: 0;
+    translate: -40vw 20vh;
+  }
+  3% {
+    opacity: 0.9;
+  }
+  9% {
+    opacity: 0;
+    translate: 60vw -20vh;
+  }
+  100% {
+    opacity: 0;
+    translate: 60vw -20vh;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* No intro and no motion for people who ask for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+  .ambientFallback,
+  .streak,
+  .e1,
+  .e2,
+  .e3,
+  .e4 {
+    animation: none;
+  }
+  .streak {
+    display: none;
+  }
+}
