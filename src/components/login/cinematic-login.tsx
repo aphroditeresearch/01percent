@@ -58,9 +58,13 @@ function SplitPanels({
     <div className={s.split}>
       <div className={s.seamLine} aria-hidden />
 
-      <section className={cn(s.splitLeft, split.media && s.splitLeftMedia, s.e3)} aria-hidden>
-        {split.media && <YouTubeBox youtubeId={split.media.youtubeId} className={s.splitMedia} />}
-        <div className={s.splitContent}>
+      <section className={cn(s.splitLeft, s.e3)} aria-hidden>
+        {split.media && (
+          <div className={s.splitMediaFrame}>
+            <YouTubeBox youtubeId={split.media.youtubeId} />
+          </div>
+        )}
+        <div className={cn(s.splitContent, split.media && s.splitContentOverlap)}>
           <div className={s.heroTitle}>
             <span className={s.heroWord}>{login.heroWord}</span>
             {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
