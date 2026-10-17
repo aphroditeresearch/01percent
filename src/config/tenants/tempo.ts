@@ -7,7 +7,7 @@ import type { TenantConfig } from "./types";
 export const tempo: TenantConfig = {
   id: "tnt_tempo",
   slug: "tempo",
-  customDomains: [],
+  customDomains: ["advanced-amd.com", "www.advanced-amd.com"],
   name: "Japan",
   wordmark: "Japan 日本",
   tagline: "Personal mentorship",
