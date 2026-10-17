@@ -66,7 +66,13 @@ export type LoginConfig =
        * Background videos in /public, supplied by the client. When omitted an
        * animated gradient stands in, so the page still works without assets.
        */
-      video?: { ambient: string; hero: string; poster?: string };
+      video?: { ambient: string; poster?: string };
+      /**
+       * Optional ambient audio played via the official YouTube IFrame Player
+       * API once the sign-in panel is visible. No video is downloaded or
+       * embedded visually — only used as a muted-until-gesture audio source.
+       */
+      ambientAudio?: { youtubeId: string; startSeconds?: number };
     };
 
 export interface TenantConfig {

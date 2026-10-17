@@ -32,7 +32,8 @@ export const tempo: TenantConfig = {
     heroKana: "日本",
     introSubtitle: "Mentorship",
     streakColor: "#ff8aa8",
-    video: { ambient: "/tenants/tempo/bg.mp4", hero: "/tenants/tempo/bg.mp4" },
+    video: { ambient: "/tenants/tempo/bg.mp4" },
+    ambientAudio: { youtubeId: "AraJg5IUD84", startSeconds: 20 },
   },
   features: {
     courses: true,

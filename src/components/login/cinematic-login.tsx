@@ -4,6 +4,8 @@ import type { LoginConfig, TenantConfig } from "@/config/tenants";
 import { burstLines } from "@/lib/burst";
 import { cn } from "@/lib/cn";
 import { isHexColor } from "@/lib/theme";
+import { AmbientAudio } from "./ambient-audio";
+import { AmbientLoopVideo } from "./ambient-loop-video";
 import s from "./cinematic.module.css";
 
 type Cinematic = Extract<LoginConfig, { style: "cinematic" }>;
@@ -30,11 +32,7 @@ function LoginIcon() {
 }
 
 function Backdrop({ src, poster }: { src?: string; poster?: string }) {
-  return src ? (
-    <video className={s.ambientVideo} src={src} poster={poster} autoPlay muted loop playsInline aria-hidden />
-  ) : (
-    <div className={s.ambientFallback} aria-hidden />
-  );
+  return src ? <AmbientLoopVideo src={src} poster={poster} /> : <div className={s.ambientFallback} aria-hidden />;
 }
 
 export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login: Cinematic }) {
@@ -65,11 +63,13 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
           </div>
         </div>
         <div className={s.flash} />
-        <div className={s.introTitle}>
-          <span className={s.introWord}>{login.heroWord}</span>
-          {login.heroKana && <span className={s.introKana}>{login.heroKana}</span>}
+        <div className={s.introStack}>
+          <div className={s.introTitle}>
+            <span className={s.introWord}>{login.heroWord}</span>
+            {login.heroKana && <span className={s.introKana}>{login.heroKana}</span>}
+          </div>
+          <div className={s.introSub}>{login.introSubtitle}</div>
         </div>
-        <div className={s.introSub}>{login.introSubtitle}</div>
         <div className={s.seam} />
         <div className={cn(s.flash, s.flashLate)} />
       </div>
@@ -114,6 +114,9 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
               <p className={s.demoNote}>
                 Demo mode: Discord isn&rsquo;t connected yet. This opens the sample portal.
               </p>
+              {login.ambientAudio && (
+                <AmbientAudio youtubeId={login.ambientAudio.youtubeId} startSeconds={login.ambientAudio.startSeconds} />
+              )}
             </div>
           </div>
         </div>

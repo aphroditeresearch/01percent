@@ -28,6 +28,19 @@
 - ⚠️ This project lives on an iCloud-synced Desktop, which created conflicting " 2" copies of
   build files. Move it to a non-synced folder (e.g. `~/Projects`) before Phase 1.
 
+## ✅ Phase 0c — Cinematic login polish (17 Oct 2026)
+
+- Tempo reworked into the first real personal-brand execution ("Japan"): bespoke hero/kana
+  treatment, sakura ambient video, extruded sticker-style wordmark.
+- The intro is retimed via two CSS custom properties on `.root` (`--hold-end`,
+  `--cut-duration`) instead of scattered literals, so pacing is a one-line change per tenant.
+  Title, subtitle and the radiating lines now dissolve out together, synced to the shutter cut,
+  instead of fading early or abruptly.
+- Two small opt-in client components — the only client JS in this login style — layer on top of
+  the still-CSS-only intro: a two-video crossfade mask that hides the ambient clip's loop seam,
+  and an ambient-audio helper (official YouTube IFrame API, muted until a user gesture,
+  config-driven per tenant).
+
 ## ▶ Phase 1 — Source control and first deploy (next)
 
 1. Create a private GitHub repo and push. Set up branch protection on `main`.
