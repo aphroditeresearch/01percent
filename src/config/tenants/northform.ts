@@ -35,6 +35,7 @@ export const northform: TenantConfig = {
     homework: false,
     protectedVideo: true,
     discord: false,
+    booking: false,
   },
   labels: {
     library: "Programmes",

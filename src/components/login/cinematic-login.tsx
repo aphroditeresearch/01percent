@@ -35,6 +35,82 @@ function Backdrop({ src, poster }: { src?: string; poster?: string }) {
   return src ? <AmbientVideo src={src} poster={poster} /> : <div className={s.ambientFallback} aria-hidden />;
 }
 
+/**
+ * Red-circle emblem for the split layout's left panel — a traditional
+ * three-tomoe (mitsudomoe) motif, the generic swirl design that symbols like
+ * the Sharingan reference are themselves built on. Drawn fresh as original
+ * vector art (not a copy of any copyrighted character artwork) so the brand
+ * mark is actually ownable.
+ */
+function TomoeEmblem({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 200 200" className={className} aria-hidden>
+      <circle cx="100" cy="100" r="96" fill="var(--t-accent)" />
+      <circle cx="100" cy="100" r="80" fill="none" stroke="#050506" strokeOpacity="0.3" strokeWidth="1.5" />
+      {[0, 120, 240].map((angle) => (
+        <path
+          key={angle}
+          d="M100,100 Q100,38 142,26 Q112,58 100,100 Z"
+          fill="#050506"
+          transform={`rotate(${angle} 100 100)`}
+        />
+      ))}
+      <circle cx="100" cy="100" r="11" fill="var(--t-accent)" stroke="#050506" strokeWidth="3" />
+    </svg>
+  );
+}
+
+/**
+ * Two-panel layout for `login.split`: brand + emblem on the left, boxed
+ * Discord sign-in on the right, cut by a diagonal seam line — the "1% on
+ * one side, Discord on the other" drafted reference. Opt-in per tenant;
+ * `CinematicLogin` falls back to the classic centred panel when omitted.
+ */
+function SplitPanels({
+  tenant,
+  login,
+  split,
+}: {
+  tenant: TenantConfig;
+  login: Cinematic;
+  split: NonNullable<Cinematic["split"]>;
+}) {
+  return (
+    <div className={s.split}>
+      <div className={s.seamLine} aria-hidden />
+
+      <section className={cn(s.splitLeft, s.e3)} aria-hidden>
+        <TomoeEmblem className={s.emblem} />
+        <div className={s.heroTitle}>
+          <span className={s.heroWord}>{login.heroWord}</span>
+          {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
+        </div>
+        <p className={s.splitTagline}>{split.tagline}</p>
+      </section>
+
+      <section className={cn(s.splitRight, s.e2)}>
+        <div className={s.panel}>
+          <h1 className={s.signIn}>Sign in</h1>
+          <p className={s.muted}>{tenant.loginBlurb}</p>
+          <div className={s.e4}>
+            {/* Demo: enters the sample portal. Real Discord OAuth arrives in Phase 2. */}
+            <form action={enterDemo}>
+              <button type="submit" className={s.button}>
+                <LoginIcon />
+                Continue with Discord
+              </button>
+            </form>
+            <p className={s.demoNote}>Demo mode: Discord isn&rsquo;t connected yet. This opens the sample portal.</p>
+            {login.ambientAudio && (
+              <AmbientAudio youtubeId={login.ambientAudio.youtubeId} startSeconds={login.ambientAudio.startSeconds} />
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login: Cinematic }) {
   const style = {
     "--streak": isHexColor(login.streakColor) ? login.streakColor : tenant.theme.accent,
@@ -92,36 +168,40 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
         <span className={s.wordmark}>{tenant.wordmark}</span>
       </header>
 
-      <main className={s.main}>
-        <div className={s.mainInner}>
-          <section className={cn(s.heroArt, s.e3)} aria-hidden>
-            <div className={s.heroTitle}>
-              <span className={s.heroWord}>{login.heroWord}</span>
-              {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
-            </div>
-            <p className={s.heroCaption}>{login.introSubtitle}</p>
-          </section>
+      <main className={cn(s.main, login.split && s.mainSplit)}>
+        {login.split ? (
+          <SplitPanels tenant={tenant} login={login} split={login.split} />
+        ) : (
+          <div className={s.mainInner}>
+            <section className={cn(s.heroArt, s.e3)} aria-hidden>
+              <div className={s.heroTitle}>
+                <span className={s.heroWord}>{login.heroWord}</span>
+                {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
+              </div>
+              <p className={s.heroCaption}>{login.introSubtitle}</p>
+            </section>
 
-          <div className={s.panel}>
-            <h1 className={cn(s.signIn, s.e2)}>Sign in</h1>
-            <p className={cn(s.muted, s.e2)}>{tenant.loginBlurb}</p>
-            <div className={s.e4}>
-              {/* Demo: enters the sample portal. Real Discord OAuth arrives in Phase 2. */}
-              <form action={enterDemo}>
-                <button type="submit" className={s.button}>
-                  <LoginIcon />
-                  Continue with Discord
-                </button>
-              </form>
-              <p className={s.demoNote}>
-                Demo mode: Discord isn&rsquo;t connected yet. This opens the sample portal.
-              </p>
-              {login.ambientAudio && (
-                <AmbientAudio youtubeId={login.ambientAudio.youtubeId} startSeconds={login.ambientAudio.startSeconds} />
-              )}
+            <div className={s.panel}>
+              <h1 className={cn(s.signIn, s.e2)}>Sign in</h1>
+              <p className={cn(s.muted, s.e2)}>{tenant.loginBlurb}</p>
+              <div className={s.e4}>
+                {/* Demo: enters the sample portal. Real Discord OAuth arrives in Phase 2. */}
+                <form action={enterDemo}>
+                  <button type="submit" className={s.button}>
+                    <LoginIcon />
+                    Continue with Discord
+                  </button>
+                </form>
+                <p className={s.demoNote}>
+                  Demo mode: Discord isn&rsquo;t connected yet. This opens the sample portal.
+                </p>
+                {login.ambientAudio && (
+                  <AmbientAudio youtubeId={login.ambientAudio.youtubeId} startSeconds={login.ambientAudio.startSeconds} />
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </main>
 
       <p className={s.footer}>{tenant.footerNote}</p>

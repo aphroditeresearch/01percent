@@ -19,7 +19,13 @@ export default async function LoginPage() {
   // existing tenant, so this changes nothing for them.
   return (
     <>
-      {tenant.introVideo && <IntroVideoGate src={tenant.introVideo.src} poster={tenant.introVideo.poster} />}
+      {tenant.introVideo && (
+        <IntroVideoGate
+          src={tenant.introVideo.src}
+          poster={tenant.introVideo.poster}
+          brandWord={tenant.login.style === "cinematic" ? tenant.login.heroWord : tenant.wordmark}
+        />
+      )}
       {login}
     </>
   );

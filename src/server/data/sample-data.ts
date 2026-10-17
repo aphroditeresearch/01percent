@@ -11,6 +11,7 @@ import "server-only";
 import type {
   Announcement,
   Assignment,
+  BookingSlot,
   Course,
   JournalEntry,
   Lesson,
@@ -123,21 +124,39 @@ export const sampleCourses: Course[] = [
     unlockMode: "open",
   },
   {
-    id: "crs_o_core",
+    id: "crs_o_c1",
     tenantId: O,
-    slug: "core",
-    title: "Lectures",
-    description: "Placeholder course — real content goes here.",
+    slug: "c1",
+    title: "C1 · The Basics",
+    description: "Liquidity cycles, structure and timing — the model from the ground up.",
     position: 1,
+    unlockMode: "sequential",
+  },
+  {
+    id: "crs_o_c2",
+    tenantId: O,
+    slug: "c2",
+    title: "C2 · The Awakened",
+    description: "OTE, divergence and the Power of Three — where the edge sharpens.",
+    position: 2,
+    unlockMode: "sequential",
+  },
+  {
+    id: "crs_o_c3",
+    tenantId: O,
+    slug: "c3",
+    title: "C3 · The Ascended",
+    description: "Higher-timeframe context: Power of Three, POC and the PD arrays that actually matter.",
+    position: 3,
     unlockMode: "sequential",
   },
   {
     id: "crs_o_recaps",
     tenantId: O,
     slug: "recaps",
-    title: "Recaps",
-    description: "Placeholder course — real content goes here.",
-    position: 2,
+    title: "Session Recaps",
+    description: "Recorded walkthroughs of live calls and session breakdowns.",
+    position: 4,
     unlockMode: "open",
   },
 ];
@@ -235,24 +254,37 @@ export const sampleLessons: Lesson[] = [
       52 + ((i * 5) % 25),
     ]),
   ),
-  ...lessonsFor(
-    O,
-    "crs_o_core",
-    "onepct",
-    Array.from({ length: 6 }, (_, i): [string, string, number] => [
-      `Lecture ${String(i + 1).padStart(2, "0")}`,
-      "Placeholder lecture — real content goes here.",
-      30 + ((i * 11) % 40),
-    ]),
-  ),
+  ...lessonsFor(O, "crs_o_c1", "c1", [
+    ["LIT Cycle", "Liquidity, Inducement, Target — the three-beat cycle every setup in this course builds from.", 38],
+    ["SMT & POI", "Smart money divergence across correlated pairs, and how to mark the point of interest it points to.", 44],
+    ["RBOS vs FBOS", "Telling a real break of structure from a fake one before size is ever on the line.", 36],
+    ["Timing", "Why the same setup works at 9:30 and fails at 1pm — session windows and kill zones.", 31],
+    ["Entries", "Turning LIT, SMT and structure into one repeatable entry model.", 49],
+    ["Masterclass of C1", "A full live read tying every C1 lesson into one session, start to finish.", 92],
+  ]),
+  ...lessonsFor(O, "crs_o_c2", "c2", [
+    ["OTE", "Optimal Trade Entry — the fib zone where the highest-quality entries cluster.", 33],
+    ["Divergence", "Reading price-action divergence as an early sign a move is losing conviction.", 29],
+    ["PO3 OHLC / OLHC", "Power of Three and its two shapes — accumulation, manipulation, distribution, both ways round.", 41],
+    ["News", "Trading around high-impact releases without getting run over by the spread.", 35],
+  ]),
+  ...lessonsFor(O, "crs_o_c3", "c3", [
+    ["Hourly PO3", "Zooming Power of Three down to the hourly range for same-day context.", 37],
+    ["POC", "Point of Control — where volume concentrated, and why price tends to react there again.", 28],
+    ["MSNR", "Reading a market structure shift against the nearest reaction level before you commit to it.", 34],
+    ["HTF AMD", "Higher-timeframe accumulation, manipulation, distribution — building weekly and daily bias.", 46],
+    ["SNR", "The support and resistance that actually matters: levels price has already reacted from.", 30],
+    ["HTF PDA Levels", "Higher-timeframe PD arrays — the order blocks, fair value gaps and liquidity pools worth marking.", 43],
+  ]),
   ...lessonsFor(
     O,
     "crs_o_recaps",
-    "onepctrecap",
+    "orecap",
     Array.from({ length: 8 }, (_, i): [string, string, number] => [
-      `Recap ${String(i + 1).padStart(2, "0")}`,
-      "Placeholder recap — real content goes here.",
-      52 + ((i * 5) % 25),
+      `Session Recap ${String(i + 1).padStart(2, "0")}`,
+      ["London open liquidity sweep", "New York open, NQ", "Asia range into London", "FOMC / news-day reaction"][i % 4] +
+        " — what was planned and what happened.",
+      20 + ((i * 6) % 22),
     ]),
   ),
 ];
@@ -265,7 +297,7 @@ export const sampleCompletions: Record<string, string[]> = {
   ],
   usr_demo_n: ["base_01", "base_02", "base_03", "mob_01", "mob_02"],
   usr_demo_t: ["tempo_01", "tempo_02", "tempo_03", "recap_01", "recap_02"],
-  usr_demo_o: ["onepct_01", "onepct_02", "onepct_03", "onepctrecap_01", "onepctrecap_02"],
+  usr_demo_o: ["c1_01", "c1_02", "c1_03", "orecap_01", "orecap_02"],
 };
 
 /** Most recently opened lessons, newest first. */
@@ -273,7 +305,7 @@ export const sampleRecent: Record<string, string[]> = {
   usr_demo_m: ["core_05", "review_10", "core_04"],
   usr_demo_n: ["base_04", "mob_02"],
   usr_demo_t: ["tempo_04", "recap_02", "tempo_03"],
-  usr_demo_o: ["onepct_04", "onepctrecap_02", "onepct_03"],
+  usr_demo_o: ["c1_04", "orecap_02", "c1_03"],
 };
 
 /** Consecutive days with at least one lesson opened, up to and including today. */
@@ -297,11 +329,22 @@ export const sampleAssignments: Assignment[] = [
   {
     id: "asg_o_1",
     tenantId: O,
-    courseId: "crs_o_core",
-    lessonId: "onepct_02",
-    title: "Placeholder assignment",
-    prompt: "Real assignment text goes here.",
+    courseId: "crs_o_c1",
+    lessonId: "c1_02",
+    title: "Mark SMT divergence across three pairs",
+    prompt:
+      "Pull up three correlated pairs intraday and mark every SMT divergence you can find at a liquidity pool. Screenshot each with the POI labeled.",
     dueAt: null,
+  },
+  {
+    id: "asg_o_2",
+    tenantId: O,
+    courseId: "crs_o_c1",
+    lessonId: "c1_05",
+    title: "Three entries from the LIT cycle",
+    prompt:
+      "Submit three hypothetical entries built from the full LIT cycle — liquidity taken, inducement, target — and explain each leg.",
+    dueAt: "2026-10-24",
   },
   {
     id: "asg_m_1",
@@ -340,7 +383,8 @@ export const sampleSubmissions: Submission[] = [
     userId: "usr_demo_o",
     status: "revision",
     submittedAt: "2026-10-08",
-    feedback: "Placeholder feedback — real feedback goes here.",
+    feedback:
+      "Good divergence marks on EURUSD and GBPUSD, but the DXY POI is late — mark it at the sweep, not after the move's already run.",
   },
   {
     id: "sub_t_1",
@@ -407,10 +451,59 @@ export const sampleAnnouncements: Announcement[] = [
   {
     id: "ann_o_1",
     tenantId: O,
-    title: "Placeholder announcement",
-    body: "Real announcement text goes here.",
+    title: "C3 — The Ascended is live",
+    body: "Hourly PO3 through HTF PDA Levels — all six lessons are in the library now.",
     publishedAt: "2026-10-11",
     pinned: true,
+  },
+];
+
+/** Upcoming 1-1 slots on the mentor's calendar. Only onepercent has `booking` enabled today. */
+export const sampleBookingSlots: BookingSlot[] = [
+  {
+    id: "bkg_o_1",
+    tenantId: O,
+    startsAt: "2026-10-20T14:00:00Z",
+    durationMinutes: 30,
+    format: "1-1 video call (Discord)",
+    spotsTotal: 1,
+    spotsTaken: 0,
+  },
+  {
+    id: "bkg_o_2",
+    tenantId: O,
+    startsAt: "2026-10-21T18:30:00Z",
+    durationMinutes: 30,
+    format: "1-1 video call (Discord)",
+    spotsTotal: 1,
+    spotsTaken: 0,
+  },
+  {
+    id: "bkg_o_3",
+    tenantId: O,
+    startsAt: "2026-10-22T14:00:00Z",
+    durationMinutes: 45,
+    format: "1-1 chart review (Discord)",
+    spotsTotal: 1,
+    spotsTaken: 1,
+  },
+  {
+    id: "bkg_o_4",
+    tenantId: O,
+    startsAt: "2026-10-23T19:00:00Z",
+    durationMinutes: 30,
+    format: "1-1 video call (Discord)",
+    spotsTotal: 1,
+    spotsTaken: 0,
+  },
+  {
+    id: "bkg_o_5",
+    tenantId: O,
+    startsAt: "2026-10-27T14:00:00Z",
+    durationMinutes: 60,
+    format: "Monthly deep-dive review",
+    spotsTotal: 3,
+    spotsTaken: 1,
   },
 ];
 

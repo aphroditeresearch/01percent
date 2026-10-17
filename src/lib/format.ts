@@ -7,3 +7,11 @@ export function formatDate(iso: string): string {
     timeZone: "UTC",
   });
 }
+
+/** "2026-10-20T14:00:00Z" → "Tue 20 Oct · 14:00 UTC". Fixed locale/zone so server and client match. */
+export function formatDateTime(iso: string): string {
+  const d = new Date(iso);
+  const date = d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+  const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC", hour12: false });
+  return `${date} · ${time} UTC`;
+}

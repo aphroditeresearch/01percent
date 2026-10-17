@@ -16,6 +16,7 @@ import type { Course, Lesson, LessonState, Viewer } from "@/lib/domain";
 import {
   sampleAnnouncements,
   sampleAssignments,
+  sampleBookingSlots,
   sampleCompletions,
   sampleCourses,
   sampleJournal,
@@ -151,4 +152,12 @@ export async function getJournalEntries(tenant: TenantConfig, viewer: Viewer) {
   return sampleJournal
     .filter((e) => e.tenantId === tenant.id && e.userId === viewer.id)
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+/** Upcoming 1-1 slots, soonest first. Past slots are never returned. */
+export async function getBookingSlots(tenant: TenantConfig) {
+  const now = Date.now();
+  return sampleBookingSlots
+    .filter((b) => b.tenantId === tenant.id && new Date(b.startsAt).getTime() >= now)
+    .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 }

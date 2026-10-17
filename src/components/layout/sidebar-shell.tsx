@@ -5,6 +5,7 @@ import { leaveDemo } from "@/app/login/actions";
 import { memberNav } from "@/lib/features";
 import { buttonStyles } from "@/components/ui/primitives";
 import { cn } from "@/lib/cn";
+import { PetalField } from "./petal-field";
 import { SidebarNavLinks } from "./nav-links";
 
 /**
@@ -60,7 +61,13 @@ function Wordmark({ tenant }: { tenant: TenantConfig }) {
  */
 export function SidebarShell({ tenant, children }: { tenant: TenantConfig; children: ReactNode }) {
   return (
-    <div className="flex min-h-dvh flex-col md:flex-row">
+    <div className="relative isolate flex min-h-dvh flex-col md:flex-row">
+      {/* Fixed behind every page in this shell (Home, Library, Lessons,
+          Homework, Journal, Booking, Account) — opt-in per tenant, see
+          petal-field.tsx. Rendered first so it paints behind the aside/main
+          below, which are both explicitly positioned for that reason. */}
+      <PetalField tenant={tenant} />
+
       <aside className="relative shrink-0 overflow-hidden border-b border-line px-6 py-6 md:flex md:w-64 md:flex-col md:gap-10 md:border-b-0 md:border-r md:px-8 md:py-10">
         {/* Soft accent bloom behind the wordmark, decorative only — colour comes
             from the tenant's own accent token, same red glow feel as the login's
@@ -90,7 +97,7 @@ export function SidebarShell({ tenant, children }: { tenant: TenantConfig; child
         </div>
       </aside>
 
-      <main id="main" className="min-w-0 flex-1 px-4 pt-10 pb-24 sm:px-8 sm:pt-14">
+      <main id="main" className="relative min-w-0 flex-1 px-4 pt-10 pb-24 sm:px-8 sm:pt-14">
         {children}
       </main>
     </div>

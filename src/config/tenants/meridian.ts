@@ -37,6 +37,7 @@ export const meridian: TenantConfig = {
     homework: true,
     protectedVideo: true,
     discord: true,
+    booking: false,
   },
   labels: {
     library: "Library",

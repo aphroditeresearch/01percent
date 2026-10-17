@@ -1,7 +1,11 @@
 /*
- * The pre-login intro: black full-bleed overlay, video centred and
- * letterboxed (never cropped, never stretched). Fades out via opacity once
- * the clip ends — see intro-video-gate.tsx for the `ended`-driven state.
+ * The pre-login intro: black full-bleed overlay, video centred and zoomed to
+ * fill the viewport (cropping past the frame edges via object-fit: cover + a
+ * slight scale, rather than letterboxing it small in the middle). The brand
+ * word fades in over the clip, then a diagonal "sword slash" wipe (two black
+ * shards flying apart along a cut line, with a bright blade-flash beat) tears
+ * the intro away to reveal the sign-in screen underneath — see
+ * intro-video-gate.tsx for the timing/state driving all of this.
  */
 
 .overlay {
@@ -11,21 +15,134 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   background: #000;
-  opacity: 1;
-  transition: opacity 700ms ease;
 }
 
+/* Once the cut fires, stop blocking clicks on the login underneath — the
+   shards are still visually sliding away at this point, but there's no
+   reason to keep eating pointer events while that plays out. */
 .overlay[data-fading="true"] {
-  opacity: 0;
   pointer-events: none;
 }
 
+/* Bigger, more "cinematic close-up" presence: fill the viewport height and
+   let a slight scale crop in past the letterbox edges, rather than the
+   smaller max-90vw/90vh contain box this used to sit in. Still centred. */
 .video {
-  max-width: 90vw;
-  max-height: 90vh;
+  min-width: 100vw;
+  min-height: 100vh;
   width: auto;
   height: auto;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  transform: scale(1.15);
+  transition: opacity 150ms ease;
+}
+
+.overlay[data-fading="true"] .video {
+  opacity: 0;
+}
+
+/* The brand word, fading in under the video's eye-line partway through
+   playback (see `showBrand` in intro-video-gate.tsx) — then fading out fast
+   the instant the slash starts, so it doesn't float over the wipe. */
+.brand {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(10px);
+  opacity: 0;
+  color: #fff;
+  font-size: clamp(2.25rem, 9vw, 5.5rem);
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.7);
+  transition:
+    opacity 900ms ease,
+    transform 900ms ease;
+  pointer-events: none;
+}
+
+.brand[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(0);
+}
+
+.overlay[data-fading="true"] .brand {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+/* A bright diagonal flash along the cut line, timed to the shards below. */
+.blade {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150vmax;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, #fff, transparent);
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.9));
+  transform: translate(-50%, -50%) rotate(-45deg) scaleX(0);
+  opacity: 0;
+}
+
+.overlay[data-fading="true"] .blade {
+  animation: bladeFlash 480ms ease-out forwards;
+}
+
+@keyframes bladeFlash {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-45deg) scaleX(0);
+  }
+  22% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(-45deg) scaleX(1);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(-45deg) scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-45deg) scaleX(1.05);
+  }
+}
+
+/* The two halves of the "sword cut": a single diagonal split (top-right to
+   bottom-left) rendered as two solid shards, invisible and at rest until the
+   cut fires, then flying apart along the slash direction. Always mounted (not
+   conditionally) so the opacity flip is instant while the transform still
+   transitions — see the component for why. */
+.shard {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  transform: translate(0, 0) rotate(0deg);
+  transition: transform 620ms cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+}
+
+.shardTop {
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.shardBottom {
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.overlay[data-fading="true"] .shard {
+  opacity: 1;
+}
+
+.overlay[data-fading="true"] .shardTop {
+  transform: translate(-65vw, -65vh) rotate(-12deg);
+}
+
+.overlay[data-fading="true"] .shardBottom {
+  transform: translate(65vw, 65vh) rotate(12deg);
 }
 
 /* Same convention as the rest of the decorative/motion layers in this

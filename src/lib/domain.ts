@@ -78,6 +78,18 @@ export interface Announcement {
   pinned: boolean;
 }
 
+/** A bookable 1-1 slot on the mentor's calendar. */
+export interface BookingSlot {
+  id: string;
+  tenantId: string;
+  /** ISO datetime, UTC. */
+  startsAt: string;
+  durationMinutes: number;
+  format: string;
+  spotsTotal: number;
+  spotsTaken: number;
+}
+
 export interface JournalEntry {
   id: string;
   tenantId: string;

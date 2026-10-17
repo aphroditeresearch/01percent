@@ -334,6 +334,76 @@
   color: var(--t-muted);
 }
 
+/* ───────── Split layout (login.split) ───────── */
+
+.mainSplit {
+  align-items: stretch;
+  padding: 0;
+}
+
+.split {
+  position: relative;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: column;
+}
+@media (min-width: 768px) {
+  .split {
+    flex-direction: row;
+  }
+}
+
+.splitLeft,
+.splitRight {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+/* The "cut in half" line — same bright-blade visual language as the intro
+   video's sword-slash transition (see intro-video-gate.module.css), just
+   at rest rather than animated: this page isn't transitioning, it just
+   reads as two halves divided by a glowing diagonal seam. */
+.seamLine {
+  display: none;
+}
+@media (min-width: 768px) {
+  .seamLine {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 150vh;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--t-accent), transparent);
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--t-accent) 65%, transparent));
+    opacity: 0.75;
+    transform: translate(-50%, -50%) rotate(12deg);
+    pointer-events: none;
+  }
+}
+
+.emblem {
+  width: clamp(110px, 15vw, 200px);
+  height: auto;
+  filter: drop-shadow(0 0 26px color-mix(in srgb, var(--t-accent) 55%, transparent));
+}
+
+.splitTagline {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--t-muted);
+}
+
 .panel {
   width: 100%;
   max-width: 26rem;

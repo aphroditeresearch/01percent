@@ -1,0 +1,84 @@
+/*
+ * Shared decorative layer for any "sakura" tenant (see HomeConfig in
+ * config/tenants/types.ts): drifting cherry-blossom petals, two soft blossom
+ * glows, and a blossom-branch graphic in the top-right corner. Rendered once,
+ * fixed over the whole viewport, behind every member page's content — not
+ * just the dashboard — so the theme reads as consistent app-wide rather than
+ * a one-off home-page flourish. Colour comes from the tenant's own
+ * `home.petalColor` (falls back to theme.accent) — nothing here is
+ * hardcoded per client.
+ */
+
+.field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  background: radial-gradient(circle, var(--petal, currentColor) 0%, transparent 72%);
+  opacity: 0.18;
+}
+
+.petal {
+  position: absolute;
+  top: -8%;
+  left: var(--left);
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle at 35% 30%, var(--petal, currentColor), transparent 72%);
+  border-radius: 70% 30% 70% 30% / 60% 40% 60% 40%;
+  opacity: var(--opacity);
+  animation: fall var(--duration) linear var(--delay) infinite;
+  will-change: transform;
+}
+
+@keyframes fall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(var(--rotate));
+  }
+  50% {
+    transform: translate3d(var(--drift), 55vh, 0) rotate(calc(var(--rotate) + 180deg));
+  }
+  100% {
+    transform: translate3d(0, 120vh, 0) rotate(calc(var(--rotate) + 360deg));
+  }
+}
+
+/* The static blossom branch in the top-right corner — a quiet "cutesy"
+   touch so the sakura motif reads as a deliberate brand element, not just
+   ambient particles. Built from plain divs (a rotated line + round blooms)
+   rather than an image asset, so it recolours per tenant for free. */
+.branch {
+  position: absolute;
+  top: -4%;
+  right: -4%;
+  width: 360px;
+  height: 360px;
+  opacity: 0.8;
+}
+
+.branchLine {
+  position: absolute;
+  background: var(--petal, currentColor);
+  opacity: 0.35;
+  border-radius: 999px;
+  transform-origin: 100% 0%;
+}
+
+.bloom {
+  position: absolute;
+  border-radius: 70% 30% 70% 30% / 60% 40% 60% 40%;
+  background: radial-gradient(circle at 35% 30%, var(--petal, currentColor), transparent 75%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petal {
+    display: none;
+  }
+}

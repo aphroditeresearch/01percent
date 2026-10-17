@@ -16,6 +16,7 @@ export function memberNav(tenant: TenantConfig): NavItem[] {
     isFeatureEnabled(tenant, "courses") && { href: "/library", label: tenant.labels.library },
     isFeatureEnabled(tenant, "journal") && { href: "/journal", label: tenant.labels.journal },
     isFeatureEnabled(tenant, "homework") && { href: "/homework", label: tenant.labels.homework },
+    isFeatureEnabled(tenant, "booking") && { href: "/booking", label: "Booking" },
     { href: "/account", label: "Account" },
   ];
   return items.filter((i): i is NavItem => Boolean(i));

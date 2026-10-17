@@ -13,6 +13,7 @@ export const FEATURE_KEYS = [
   "homework",
   "protectedVideo",
   "discord",
+  "booking",
 ] as const;
 
 export type FeatureKey = (typeof FEATURE_KEYS)[number];
@@ -73,6 +74,16 @@ export type LoginConfig =
        * embedded visually — only used as a muted-until-gesture audio source.
        */
       ambientAudio?: { youtubeId: string; startSeconds?: number };
+      /**
+       * Opt-in two-panel layout: brand word + emblem on the left, boxed
+       * sign-in panel on the right, divided by a diagonal seam line. Omit
+       * for the classic single centred panel (e.g. tempo) — nothing
+       * changes there. See cinematic-login.tsx's `SplitPanels`.
+       */
+      split?: {
+        /** Line shown under the hero word on the left panel, e.g. "Private mentorship". */
+        tagline: string;
+      };
     };
 
 /**

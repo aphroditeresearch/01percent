@@ -43,6 +43,7 @@ export const tempo: TenantConfig = {
     homework: true,
     protectedVideo: true,
     discord: true,
+    booking: false,
   },
   labels: {
     library: "Lectures",
