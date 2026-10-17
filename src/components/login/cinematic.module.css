@@ -97,6 +97,16 @@
   font-size: clamp(4rem, 14vw, 11rem);
   line-height: 0.85;
   letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow:
+    0.008em 0.008em 0 var(--t-accent),
+    0.016em 0.016em 0 var(--t-accent),
+    0.024em 0.024em 0 var(--t-accent),
+    0.032em 0.032em 0 var(--t-accent),
+    0.04em 0.04em 0 var(--t-accent),
+    0.048em 0.048em 0 var(--t-accent),
+    0.056em 0.056em 0 var(--t-accent),
+    0.064em 0.064em 0 var(--t-accent);
 }
 
 .introKana {
@@ -227,78 +237,67 @@
 }
 
 .mainInner {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  max-width: 72rem;
+  max-width: 40rem;
   margin: 0 auto;
   gap: 2.5rem;
-  align-items: center;
-}
-@media (min-width: 900px) {
-  .mainInner {
-    grid-template-columns: 1.35fr 1fr;
-    gap: 4rem;
-  }
+  text-align: center;
 }
 
 .heroArt {
-  position: relative;
-}
-
-.heroPanel {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.14);
-  background: #08090b;
-  box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.9);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
-}
-@media (max-width: 899px) {
-  .heroPanel {
-    aspect-ratio: 16 / 10;
-  }
-}
-
-.heroPanel video,
-.heroPanel .ambientFallback {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .heroTitle {
-  position: absolute;
-  left: -0.04em;
-  bottom: -0.12em;
   display: flex;
-  flex-direction: column;
-  pointer-events: none;
-  mix-blend-mode: difference;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.4em;
 }
 
 .heroWord {
   font-family: var(--font-display);
   font-stretch: var(--t-display-stretch);
   font-weight: var(--t-display-weight);
-  font-size: clamp(4rem, 12vw, 9.5rem);
+  font-size: clamp(3.5rem, 11vw, 8rem);
   line-height: 0.82;
   letter-spacing: -0.03em;
   color: #fff;
+  text-shadow:
+    0.008em 0.008em 0 var(--t-accent),
+    0.016em 0.016em 0 var(--t-accent),
+    0.024em 0.024em 0 var(--t-accent),
+    0.032em 0.032em 0 var(--t-accent),
+    0.04em 0.04em 0 var(--t-accent),
+    0.048em 0.048em 0 var(--t-accent),
+    0.056em 0.056em 0 var(--t-accent),
+    0.064em 0.064em 0 var(--t-accent);
 }
 
 .heroKana {
-  order: -1;
-  margin-left: 0.25em;
+  padding-bottom: 0.4em;
   font-family: var(--font-dela), sans-serif;
   font-size: clamp(1.25rem, 3vw, 2.25rem);
-  color: #fff;
+  color: var(--t-accent);
+}
+
+.heroCaption {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  color: var(--t-muted);
 }
 
 .panel {
+  width: 100%;
+  max-width: 26rem;
   border: 1px solid rgb(255 255 255 / 0.1);
   background: rgb(10 11 14 / 0.6);
   backdrop-filter: blur(14px);

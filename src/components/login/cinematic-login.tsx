@@ -95,17 +95,11 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
       <main className={s.main}>
         <div className={s.mainInner}>
           <section className={cn(s.heroArt, s.e3)} aria-hidden>
-            <div className={s.heroPanel}>
-              {login.video ? (
-                <video src={login.video.hero} poster={login.video.poster} autoPlay muted loop playsInline preload="auto" />
-              ) : (
-                <div className={s.ambientFallback} />
-              )}
-            </div>
             <div className={s.heroTitle}>
               <span className={s.heroWord}>{login.heroWord}</span>
               {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
             </div>
+            <p className={s.heroCaption}>{login.introSubtitle}</p>
           </section>
 
           <div className={s.panel}>
