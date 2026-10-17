@@ -40,6 +40,11 @@
   the still-CSS-only intro: a two-video crossfade mask that hides the ambient clip's loop seam,
   and an ambient-audio helper (official YouTube IFrame API, muted until a user gesture,
   config-driven per tenant).
+- Fixed the member area being reachable without ever seeing the login screen: `/` previously
+  rendered the dashboard unconditionally. A demo-only cookie gate (`src/server/demo-session.ts`,
+  server actions in `src/app/login/actions.ts`) now redirects to `/login` until "Continue with
+  Discord" is clicked, and "Log out" actually clears it. Not real auth — flagged as such in code,
+  same as the rest of the demo session.
 
 ## ▶ Phase 1 — Source control and first deploy (next)
 

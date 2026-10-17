@@ -1,4 +1,5 @@
-import { ButtonLink, buttonStyles } from "@/components/ui/primitives";
+import { buttonStyles } from "@/components/ui/primitives";
+import { enterDemo } from "@/app/login/actions";
 import { cn } from "@/lib/cn";
 import type { TenantConfig } from "@/config/tenants";
 
@@ -20,9 +21,11 @@ export function EditorialLogin({ tenant }: { tenant: TenantConfig }) {
 
         <div className="w-full space-y-3 pt-2">
           {/* Real Discord / email sign-in replaces this in Phase 2. */}
-          <ButtonLink href="/" className="w-full">
-            Enter demo portal
-          </ButtonLink>
+          <form action={enterDemo}>
+            <button type="submit" className={cn(buttonStyles.primary, "w-full")}>
+              Enter demo portal
+            </button>
+          </form>
           <button type="button" disabled className={cn(buttonStyles.outline, "w-full")}>
             Continue with Discord
           </button>

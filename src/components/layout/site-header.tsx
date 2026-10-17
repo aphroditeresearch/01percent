@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { TenantConfig } from "@/config/tenants";
+import { leaveDemo } from "@/app/login/actions";
 import { memberNav } from "@/lib/features";
 import { buttonStyles } from "@/components/ui/primitives";
 import { cn } from "@/lib/cn";
@@ -16,20 +17,20 @@ export function SiteHeader({ tenant }: { tenant: TenantConfig }) {
           <Link href="/" className="heading-display text-2xl tracking-wide text-ink">
             {tenant.wordmark}
           </Link>
-          <div className="md:hidden">
-            <Link href="/login" className={cn(buttonStyles.outline, "px-4 py-2")}>
+          <form action={leaveDemo} className="md:hidden">
+            <button type="submit" className={cn(buttonStyles.outline, "px-4 py-2")}>
               Log out
-            </Link>
-          </div>
+            </button>
+          </form>
         </div>
         <div className="flex min-w-0 items-center gap-8">
           <NavLinks items={memberNav(tenant)} />
           {/* Demo: goes back to the login screen. Phase 2 makes this a real sign-out action. */}
-          <div className="hidden md:block">
-            <Link href="/login" className={cn(buttonStyles.outline, "px-4 py-2.5")}>
+          <form action={leaveDemo} className="hidden md:block">
+            <button type="submit" className={cn(buttonStyles.outline, "px-4 py-2.5")}>
               Log out
-            </Link>
-          </div>
+            </button>
+          </form>
         </div>
       </nav>
     </header>

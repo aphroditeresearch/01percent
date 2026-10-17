@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { CSSProperties } from "react";
 import type { LoginConfig, TenantConfig } from "@/config/tenants";
+import { enterDemo } from "@/app/login/actions";
 import { burstLines } from "@/lib/burst";
 import { cn } from "@/lib/cn";
 import { isHexColor } from "@/lib/theme";
@@ -107,10 +107,12 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
             <p className={cn(s.muted, s.e2)}>{tenant.loginBlurb}</p>
             <div className={s.e4}>
               {/* Demo: enters the sample portal. Real Discord OAuth arrives in Phase 2. */}
-              <Link href="/" className={s.button}>
-                <LoginIcon />
-                Continue with Discord
-              </Link>
+              <form action={enterDemo}>
+                <button type="submit" className={s.button}>
+                  <LoginIcon />
+                  Continue with Discord
+                </button>
+              </form>
               <p className={s.demoNote}>
                 Demo mode: Discord isn&rsquo;t connected yet. This opens the sample portal.
               </p>
