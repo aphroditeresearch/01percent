@@ -2,16 +2,18 @@ import type { TenantConfig } from "./types";
 
 /**
  * "1%" — private trading mentorship brand. Same cinematic-login + sidebar +
- * sakura-dashboard shell as tempo.ts, same red/pink Japan palette, sakura
- * petals and native rays/shake/shutter intro, with no kana. This file is
- * the template for cloning a new tenant: copy it, swap the colours/copy
- * below, done.
+ * sakura-dashboard shell as tempo.ts, same red/pink Japan palette and native
+ * rays/shake/shutter launch intro, with no kana. Unlike tempo it opts into
+ * `ambientPetals` (falling sakura instead of the halftone/streak backdrop)
+ * and `login.split` (two-panel sign-in with a moving-wallpaper clip). This
+ * file is the template for cloning a new tenant: copy it, swap the
+ * colours/copy below, done.
  *
  * No `introVideo` here on purpose — that was a separate full-screen video
  * pre-roll layered on top of the cinematic login's own intro burst, which
  * read as a muddled double-intro / cross-fade. Omitting it means this
- * tenant runs the exact same intro as tempo.ts (rays, camera-shake, shutter
- * slash) with zero extra code — see cinematic.module.css's `.intro`.
+ * tenant's launch sequence is byte-for-byte the same code as tempo.ts (rays,
+ * camera-shake, shutter slash) — see cinematic.module.css's `.intro`.
  */
 export const onepercent: TenantConfig = {
   id: "tnt_onepercent",
@@ -48,9 +50,11 @@ export const onepercent: TenantConfig = {
     streakColor: "#ff8aa8",
     // No ambient background video supplied yet — the cinematic login falls
     // back to its animated-gradient backdrop (see LoginConfig.video doc).
-    // Two-panel split: looping clip + "1%" (sword-slashed) + tagline on the
-    // left, Discord sign-in boxed on the right, cut by a diagonal seam —
-    // opt-in, see LoginConfig.split doc.
+    // Falling sakura petals instead of the default halftone/streak backdrop.
+    ambientPetals: true,
+    // Two-panel split: looping clip filling the left panel as a moving
+    // wallpaper, "1%" + tagline overlaid on it, Discord sign-in boxed on
+    // the right, cut by a diagonal seam — opt-in, see LoginConfig.split doc.
     split: {
       tagline: "Private mentorship",
       media: { youtubeId: "-5RVEKRfbsY" },

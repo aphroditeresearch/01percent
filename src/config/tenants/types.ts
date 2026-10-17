@@ -75,6 +75,14 @@ export type LoginConfig =
        */
       ambientAudio?: { youtubeId: string; startSeconds?: number };
       /**
+       * Opt-in: swap the default backdrop (halftone dots + flying light
+       * streaks) for the falling-sakura-petal field used on member pages
+       * (see components/layout/petal-field.tsx). Only takes effect when
+       * `home.style` is also "sakura" — PetalField itself is a no-op
+       * otherwise. Omit to keep the classic halftone/streak backdrop.
+       */
+      ambientPetals?: boolean;
+      /**
        * Opt-in two-panel layout: brand word + emblem on the left, boxed
        * sign-in panel on the right, divided by a diagonal seam line. Omit
        * for the classic single centred panel (e.g. tempo) — nothing

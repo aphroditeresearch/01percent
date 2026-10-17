@@ -390,16 +390,29 @@
   }
 }
 
-/* Framed, cropped loop of the hype clip above the hero word — see
-   YouTubeBox. The iframe is oversized and centred so a landscape source
-   crops to fill this portrait frame like object-fit: cover would. */
-.splitMedia {
-  position: relative;
-  width: clamp(190px, 46vw, 300px);
-  aspect-ratio: 3 / 4;
+/* When a looping clip is supplied (login.split.media) it fills the whole
+   left panel edge-to-edge as a moving wallpaper — no frame, no border, no
+   player chrome — with the hero word + tagline overlapping the bottom of
+   it (see .splitContent) rather than stacked below a boxed clip. */
+.splitLeftMedia {
+  justify-content: flex-end;
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.12);
-  box-shadow: 0 30px 70px -25px rgb(0 0 0 / 0.75);
+  padding-bottom: 3.5rem;
+}
+.splitLeftMedia::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgb(5 5 6 / 0) 40%, rgb(5 5 6 / 0.55) 75%, rgb(5 5 6 / 0.88));
+  pointer-events: none;
+}
+
+.splitMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
 }
 .splitMedia iframe {
   position: absolute;
@@ -412,22 +425,15 @@
   border: 0;
 }
 
-/* The sword-slash mark drawn across the split layout's hero word. */
-.heroTitleSlashed {
+/* Hero word + tagline, raised above both the wallpaper clip and its
+   bottom scrim so they read as overlaid on it, not stacked beneath it. */
+.splitContent {
   position: relative;
-}
-.wordSlash {
-  position: absolute;
-  left: -14%;
-  right: -14%;
-  top: 46%;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #eaf6ff 15%, var(--t-accent) 50%, #eaf6ff 85%, transparent);
-  box-shadow:
-    0 0 10px 2px color-mix(in srgb, var(--t-accent) 75%, transparent),
-    0 0 22px 6px rgb(255 255 255 / 0.3);
-  transform: translateY(-50%) rotate(-9deg);
-  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .splitTagline {

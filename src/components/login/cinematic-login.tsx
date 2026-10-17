@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { LoginConfig, TenantConfig } from "@/config/tenants";
 import { enterDemo } from "@/app/login/actions";
+import { PetalField } from "@/components/layout/petal-field";
 import { burstLines } from "@/lib/burst";
 import { cn } from "@/lib/cn";
 import { isHexColor } from "@/lib/theme";
@@ -37,11 +38,12 @@ function Backdrop({ src, poster }: { src?: string; poster?: string }) {
 }
 
 /**
- * Two-panel layout for `login.split`: a looping clip in a framed box with
- * the hero word (torn across by a sword-slash mark) and tagline underneath
- * on the left, boxed Discord sign-in on the right, the pair cut by a
- * diagonal seam line. Opt-in per tenant; `CinematicLogin` falls back to the
- * classic centred panel when omitted.
+ * Two-panel layout for `login.split`: when `split.media` is supplied, a
+ * looping muted clip fills the whole left panel as a moving wallpaper (no
+ * frame, no controls) with the hero word + tagline overlaid on its bottom
+ * edge; without it, just the word + tagline centred. Boxed Discord sign-in
+ * on the right, the pair cut by a diagonal seam line. Opt-in per tenant;
+ * `CinematicLogin` falls back to the classic centred panel when omitted.
  */
 function SplitPanels({
   tenant,
@@ -56,14 +58,15 @@ function SplitPanels({
     <div className={s.split}>
       <div className={s.seamLine} aria-hidden />
 
-      <section className={cn(s.splitLeft, s.e3)} aria-hidden>
+      <section className={cn(s.splitLeft, split.media && s.splitLeftMedia, s.e3)} aria-hidden>
         {split.media && <YouTubeBox youtubeId={split.media.youtubeId} className={s.splitMedia} />}
-        <div className={cn(s.heroTitle, s.heroTitleSlashed)}>
-          <span className={s.heroWord}>{login.heroWord}</span>
-          {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
-          <span className={s.wordSlash} />
+        <div className={s.splitContent}>
+          <div className={s.heroTitle}>
+            <span className={s.heroWord}>{login.heroWord}</span>
+            {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
+          </div>
+          <p className={s.splitTagline}>{split.tagline}</p>
         </div>
-        <p className={s.splitTagline}>{split.tagline}</p>
       </section>
 
       <section className={cn(s.splitRight, s.e2)}>
@@ -131,15 +134,21 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
       <div className={s.ambient} aria-hidden>
         <Backdrop src={login.video?.ambient} poster={login.video?.poster} />
         <div className={s.shade} />
-        <div className={cn(s.halftone, s.halftoneTopRight)} />
-        <div className={cn(s.halftone, s.halftoneBottomLeft)} />
-        {STREAKS.map((st, i) => (
-          <div
-            key={i}
-            className={cn(s.streak, st.blue && s.streakBlue)}
-            style={{ left: st.left, top: st.top, animationDelay: st.delay, width: st.width }}
-          />
-        ))}
+        {login.ambientPetals ? (
+          <PetalField tenant={tenant} />
+        ) : (
+          <>
+            <div className={cn(s.halftone, s.halftoneTopRight)} />
+            <div className={cn(s.halftone, s.halftoneBottomLeft)} />
+            {STREAKS.map((st, i) => (
+              <div
+                key={i}
+                className={cn(s.streak, st.blue && s.streakBlue)}
+                style={{ left: st.left, top: st.top, animationDelay: st.delay, width: st.width }}
+              />
+            ))}
+          </>
+        )}
       </div>
 
       <header className={cn(s.header, s.e1)}>
