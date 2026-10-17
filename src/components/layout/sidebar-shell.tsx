@@ -9,10 +9,11 @@ import { SidebarNavLinks } from "./nav-links";
 
 /**
  * The sidebar's brand lockup. For a cinematic-login tenant this reuses that
- * screen's own hero word + kana (kana line on top, word below, same accent
- * "sticker" extrusion) so the portal reads as a continuation of the login
- * rather than a plain text link. Any other tenant just gets its wordmark —
- * nothing here is hardcoded per client.
+ * screen's own hero word + kana — word first, kana set vertically to its
+ * right, bottom-aligned, same accent "sticker" extrusion — matching the
+ * login's own `.heroTitle`/`.heroWord`/`.heroKana` layout so the portal reads
+ * as a continuation of the login rather than a plain text link. Any other
+ * tenant just gets its wordmark — nothing here is hardcoded per client.
  */
 function Wordmark({ tenant }: { tenant: TenantConfig }) {
   const cinematic = tenant.login.style === "cinematic" ? tenant.login : null;
@@ -24,10 +25,7 @@ function Wordmark({ tenant }: { tenant: TenantConfig }) {
     );
   }
   return (
-    <Link href="/" className="flex flex-col gap-1.5">
-      {cinematic.heroKana && (
-        <span className="label-caps text-[0.7rem] tracking-[0.35em] text-accent">{cinematic.heroKana}</span>
-      )}
+    <Link href="/" className="flex items-end gap-2">
       <span
         className="heading-display text-2xl text-ink"
         style={{
@@ -36,6 +34,20 @@ function Wordmark({ tenant }: { tenant: TenantConfig }) {
       >
         {cinematic.heroWord}
       </span>
+      {cinematic.heroKana && (
+        <span
+          className="text-accent"
+          style={{
+            writingMode: "vertical-rl",
+            textOrientation: "upright",
+            fontSize: "0.8rem",
+            letterSpacing: "0.1em",
+            paddingBottom: "0.15em",
+          }}
+        >
+          {cinematic.heroKana}
+        </span>
+      )}
     </Link>
   );
 }
