@@ -14,7 +14,10 @@ import type { TenantConfig } from "./types";
 export const onepercent: TenantConfig = {
   id: "tnt_onepercent",
   slug: "onepercent",
-  customDomains: [],
+  // The Vercel-assigned production alias, so this tenant actually resolves
+  // there while no real custom domain is set up yet. Add the real domain
+  // here (and keep this one) once one exists.
+  customDomains: ["01percent-aphrodite-research.vercel.app"],
   name: "1%",
   wordmark: "1% Mentorship",
   tagline: "Private trading mentorship",
