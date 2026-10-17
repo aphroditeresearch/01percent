@@ -33,8 +33,8 @@ export const tempo: TenantConfig = {
     introSubtitle: "Mentorship",
     streakColor: "#ff8aa8",
     video: { ambient: "/tenants/tempo/bg.mp4" },
-    ambientAudio: { youtubeId: "AraJg5IUD84", startSeconds: 20 },
   },
+  memberLayout: "sidebar",
   features: {
     courses: true,
     announcements: true,
@@ -44,7 +44,7 @@ export const tempo: TenantConfig = {
     discord: true,
   },
   labels: {
-    library: "Library",
+    library: "Lectures",
     journal: "Journal",
     homework: "Homework",
   },

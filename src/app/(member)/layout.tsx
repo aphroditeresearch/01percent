@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { DemoBanner } from "@/components/layout/demo-banner";
+import { SidebarShell } from "@/components/layout/sidebar-shell";
 import { SiteFooter, SiteHeader } from "@/components/layout/site-header";
 import { getTenant } from "@/server/tenant";
 import { IS_DEMO_SESSION } from "@/server/session";
@@ -15,6 +16,16 @@ import { hasEnteredDemo } from "@/server/demo-session";
 export default async function MemberLayout({ children }: LayoutProps<"/">) {
   const tenant = await getTenant();
   if (!(await hasEnteredDemo())) redirect("/login");
+
+  if (tenant.memberLayout === "sidebar") {
+    return (
+      <>
+        {IS_DEMO_SESSION && <DemoBanner />}
+        <SidebarShell tenant={tenant}>{children}</SidebarShell>
+      </>
+    );
+  }
+
   return (
     <>
       {IS_DEMO_SESSION && <DemoBanner />}

@@ -1,16 +1,16 @@
 /*
  * Cinematic login. Intro is pure CSS; optional ambient video/audio helpers
  * are small opt-in client components, the core reveal stays JS-free.
- * Timeline: burst + pop-in (~0.75s) → hold at full size until --hold-end →
- * title/subtitle dissolve out while shutters cut open (--cut-duration) →
+ * Timeline: camera-shake burst + pop-in (~0.8s) → brief hold until --hold-end
+ * → title/subtitle dissolve out while shutters cut open (--cut-duration) →
  * page elements stagger in. Retime the whole thing by editing --hold-end
  * and --cut-duration on .root — nothing else needs to change.
  * Colours come from tenant tokens (--t-*) plus --streak set on .root.
  */
 
 .root {
-  --hold-end: 3.8s;
-  --cut-duration: 0.55s;
+  --hold-end: 2.3s;
+  --cut-duration: 0.4s;
   --intro-end: calc(var(--hold-end) + var(--cut-duration));
   position: relative;
   isolation: isolate;
@@ -32,7 +32,9 @@
   display: grid;
   place-items: center;
   pointer-events: none;
-  animation: introOut 0.01s linear var(--intro-end) forwards;
+  animation:
+    introOut 0.01s linear var(--intro-end) forwards,
+    shake 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 .shutter {
@@ -554,6 +556,36 @@
   from {
     opacity: 0;
     transform: translateY(14px);
+  }
+}
+/* Camera-shake punch on the burst, settling out before the hold. */
+@keyframes shake {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  10% {
+    transform: translate3d(-8px, 4px, 0) rotate(-0.4deg);
+  }
+  20% {
+    transform: translate3d(7px, -6px, 0) rotate(0.3deg);
+  }
+  30% {
+    transform: translate3d(-6px, 5px, 0) rotate(-0.3deg);
+  }
+  40% {
+    transform: translate3d(5px, -4px, 0) rotate(0.2deg);
+  }
+  55% {
+    transform: translate3d(-3px, 3px, 0) rotate(-0.15deg);
+  }
+  70% {
+    transform: translate3d(2px, -2px, 0);
+  }
+  85% {
+    transform: translate3d(-1px, 1px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
   }
 }
 

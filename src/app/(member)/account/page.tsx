@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { ButtonLink, DetailRow, NotYet, PageTitle, Pill } from "@/components/ui/primitives";
+import { leaveDemo } from "@/app/login/actions";
+import { DetailRow, NotYet, PageTitle, Pill, buttonStyles } from "@/components/ui/primitives";
+import { cn } from "@/lib/cn";
 import { isFeatureEnabled } from "@/lib/features";
 import { formatDate } from "@/lib/format";
 import { getViewer } from "@/server/session";
@@ -40,9 +42,12 @@ export default async function AccountPage() {
         )}
       </dl>
 
-      <ButtonLink href="/login" variant="outline">
-        Log out
-      </ButtonLink>
+      {/* Demo: actually clears the session cookie, same as the header's Log out. */}
+      <form action={leaveDemo}>
+        <button type="submit" className={cn(buttonStyles.outline)}>
+          Log out
+        </button>
+      </form>
     </div>
   );
 }

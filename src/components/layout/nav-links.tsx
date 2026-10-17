@@ -37,3 +37,31 @@ export function NavLinks({ items }: { items: NavItem[] }) {
     </ul>
   );
 }
+
+/** Vertical variant for the sidebar member shell (see sidebar-shell.tsx). */
+export function SidebarNavLinks({ items }: { items: NavItem[] }) {
+  const pathname = usePathname();
+  return (
+    <ul className="flex flex-col gap-1">
+      {items.map((item) => {
+        const active = isActive(pathname, item.href);
+        return (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "label-caps flex items-center gap-3 border-l-2 py-2.5 pl-3 transition-colors",
+                active
+                  ? "border-accent font-semibold text-ink"
+                  : "border-transparent text-muted hover:border-line hover:text-ink",
+              )}
+            >
+              {item.label}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}

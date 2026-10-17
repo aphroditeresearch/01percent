@@ -51,6 +51,21 @@
   copies crossfaded to mask its loop seam; replaced with a single `<video loop>`
   (`ambient-video.tsx`, no client JS), trading a slightly visible loop cut for materially less
   decode cost and no double-exposure ghosting during playback.
+- Retimed and punched up the intro: `--hold-end`/`--cut-duration` shortened (3.8s/0.55s →
+  2.3s/0.4s) so the cut into the site arrives sooner, and added a short CSS camera-shake keyframe
+  on the burst (`.intro`, skipped under reduced motion, same as the rest of the intro).
+- New opt-in member-area shell: `memberLayout: "sidebar"` on a tenant (set for Tempo) swaps the
+  top nav/footer for a left-rail shell (`sidebar-shell.tsx` — wordmark, vertical nav, sign-out,
+  a soft accent-coloured glow) instead of `SiteHeader`/`SiteFooter`. Default (`"header"`, or
+  unset) is unchanged for Meridian/Northform. Fixed the Account page's "Log out" button, which
+  was a plain link and never actually cleared the demo-session cookie.
+- Tempo's sample content was renamed from finished-looking trading copy to plainly-generic
+  placeholders ("Lecture 01", "Recap 01", "Placeholder lecture — real content goes here.", etc.)
+  across lessons, courses, the one assignment/submission, and the one announcement, so the demo
+  reads as a shell waiting for real content rather than a second finished course.
+- Removed Tempo's ambient audio (the YouTube-sourced background track on the cinematic login) by
+  dropping its `ambientAudio` config. The `AmbientAudio` component and its `login.ambientAudio`
+  config type stay in place, unused, in case a tenant wants it switched back on later.
 
 ## ▶ Phase 1 — Source control and first deploy (next)
 

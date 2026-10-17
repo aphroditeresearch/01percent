@@ -91,6 +91,12 @@ export interface TenantConfig {
   disclaimer?: string;
   theme: TenantTheme;
   login: LoginConfig;
+  /**
+   * Member-area chrome. "header" (default) is the classic top nav + footer.
+   * "sidebar" is a left-rail shell (wordmark, vertical nav, sign-out) for a
+   * more app-like feel — see sidebar-shell.tsx.
+   */
+  memberLayout?: "header" | "sidebar";
   features: Record<FeatureKey, boolean>;
   /** Mentor-chosen names for navigation items. */
   labels: {
