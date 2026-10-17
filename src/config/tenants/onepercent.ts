@@ -6,10 +6,10 @@ import type { TenantConfig } from "./types";
  * Japan red/pink, with no kana. This file is the template for cloning a new
  * tenant: copy it, swap the colours/copy/video paths below, done.
  *
- * `introVideo` is intentionally left unset until a real video asset lands in
- * `public/tenants/onepercent/` — see intro-video-gate.tsx. Once that file
- * exists, set `introVideo: { src: "/tenants/onepercent/intro.mp4" }` and the
- * black-screen-then-cross-fade intro turns on automatically.
+ * `introVideo` points at `public/tenants/onepercent/intro.mp4` — a
+ * full-screen black intro that cross-fades into the login once it ends.
+ * See intro-video-gate.tsx. Omit this field entirely to go back to the
+ * classic behaviour (login renders immediately, no gate).
  */
 export const onepercent: TenantConfig = {
   id: "tnt_onepercent",
@@ -43,6 +43,7 @@ export const onepercent: TenantConfig = {
   },
   memberLayout: "sidebar",
   home: { style: "sakura", petalColor: "#d4af37" },
+  introVideo: { src: "/tenants/onepercent/intro.mp4" },
   features: {
     courses: true,
     announcements: true,
