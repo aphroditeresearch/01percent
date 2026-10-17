@@ -2,14 +2,16 @@ import type { TenantConfig } from "./types";
 
 /**
  * "1%" — private trading mentorship brand. Same cinematic-login + sidebar +
- * sakura-dashboard shell as tempo.ts, same red/pink Japan palette and sakura
- * petals, with no kana. This file is the template for cloning a new tenant:
- * copy it, swap the colours/copy/video paths below, done.
+ * sakura-dashboard shell as tempo.ts, same red/pink Japan palette, sakura
+ * petals and native rays/shake/shutter intro, with no kana. This file is
+ * the template for cloning a new tenant: copy it, swap the colours/copy
+ * below, done.
  *
- * `introVideo` points at `public/tenants/onepercent/intro.mp4` — a
- * full-screen black intro that cross-fades into the login once it ends.
- * See intro-video-gate.tsx. Omit this field entirely to go back to the
- * classic behaviour (login renders immediately, no gate).
+ * No `introVideo` here on purpose — that was a separate full-screen video
+ * pre-roll layered on top of the cinematic login's own intro burst, which
+ * read as a muddled double-intro / cross-fade. Omitting it means this
+ * tenant runs the exact same intro as tempo.ts (rays, camera-shake, shutter
+ * slash) with zero extra code — see cinematic.module.css's `.intro`.
  */
 export const onepercent: TenantConfig = {
   id: "tnt_onepercent",
@@ -46,13 +48,16 @@ export const onepercent: TenantConfig = {
     streakColor: "#ff8aa8",
     // No ambient background video supplied yet — the cinematic login falls
     // back to its animated-gradient backdrop (see LoginConfig.video doc).
-    // Two-panel split: "1%" + emblem on the left, Discord sign-in boxed on
-    // the right, cut by a diagonal seam — opt-in, see LoginConfig.split doc.
-    split: { tagline: "Private mentorship" },
+    // Two-panel split: looping clip + "1%" (sword-slashed) + tagline on the
+    // left, Discord sign-in boxed on the right, cut by a diagonal seam —
+    // opt-in, see LoginConfig.split doc.
+    split: {
+      tagline: "Private mentorship",
+      media: { youtubeId: "-5RVEKRfbsY" },
+    },
   },
   memberLayout: "sidebar",
   home: { style: "sakura", petalColor: "#ff8aa8" },
-  introVideo: { src: "/tenants/onepercent/intro.mp4" },
   features: {
     courses: true,
     announcements: true,

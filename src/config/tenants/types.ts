@@ -83,6 +83,12 @@ export type LoginConfig =
       split?: {
         /** Line shown under the hero word on the left panel, e.g. "Private mentorship". */
         tagline: string;
+        /**
+         * Optional looping, muted YouTube clip shown in a framed box above
+         * the hero word on the left panel. Purely decorative — no audio, no
+         * controls. Omit for just the emblem/word/tagline stack.
+         */
+        media?: { youtubeId: string };
       };
     };
 

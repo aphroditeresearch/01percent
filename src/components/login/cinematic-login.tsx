@@ -6,6 +6,7 @@ import { cn } from "@/lib/cn";
 import { isHexColor } from "@/lib/theme";
 import { AmbientAudio } from "./ambient-audio";
 import { AmbientVideo } from "./ambient-video";
+import { YouTubeBox } from "./youtube-box";
 import s from "./cinematic.module.css";
 
 type Cinematic = Extract<LoginConfig, { style: "cinematic" }>;
@@ -36,35 +37,11 @@ function Backdrop({ src, poster }: { src?: string; poster?: string }) {
 }
 
 /**
- * Red-circle emblem for the split layout's left panel — a traditional
- * three-tomoe (mitsudomoe) motif, the generic swirl design that symbols like
- * the Sharingan reference are themselves built on. Drawn fresh as original
- * vector art (not a copy of any copyrighted character artwork) so the brand
- * mark is actually ownable.
- */
-function TomoeEmblem({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 200 200" className={className} aria-hidden>
-      <circle cx="100" cy="100" r="96" fill="var(--t-accent)" />
-      <circle cx="100" cy="100" r="80" fill="none" stroke="#050506" strokeOpacity="0.3" strokeWidth="1.5" />
-      {[0, 120, 240].map((angle) => (
-        <path
-          key={angle}
-          d="M100,100 Q100,38 142,26 Q112,58 100,100 Z"
-          fill="#050506"
-          transform={`rotate(${angle} 100 100)`}
-        />
-      ))}
-      <circle cx="100" cy="100" r="11" fill="var(--t-accent)" stroke="#050506" strokeWidth="3" />
-    </svg>
-  );
-}
-
-/**
- * Two-panel layout for `login.split`: brand + emblem on the left, boxed
- * Discord sign-in on the right, cut by a diagonal seam line — the "1% on
- * one side, Discord on the other" drafted reference. Opt-in per tenant;
- * `CinematicLogin` falls back to the classic centred panel when omitted.
+ * Two-panel layout for `login.split`: a looping clip in a framed box with
+ * the hero word (torn across by a sword-slash mark) and tagline underneath
+ * on the left, boxed Discord sign-in on the right, the pair cut by a
+ * diagonal seam line. Opt-in per tenant; `CinematicLogin` falls back to the
+ * classic centred panel when omitted.
  */
 function SplitPanels({
   tenant,
@@ -80,10 +57,11 @@ function SplitPanels({
       <div className={s.seamLine} aria-hidden />
 
       <section className={cn(s.splitLeft, s.e3)} aria-hidden>
-        <TomoeEmblem className={s.emblem} />
-        <div className={s.heroTitle}>
+        {split.media && <YouTubeBox youtubeId={split.media.youtubeId} className={s.splitMedia} />}
+        <div className={cn(s.heroTitle, s.heroTitleSlashed)}>
           <span className={s.heroWord}>{login.heroWord}</span>
           {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
+          <span className={s.wordSlash} />
         </div>
         <p className={s.splitTagline}>{split.tagline}</p>
       </section>

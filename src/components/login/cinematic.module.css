@@ -390,10 +390,44 @@
   }
 }
 
-.emblem {
-  width: clamp(110px, 15vw, 200px);
-  height: auto;
-  filter: drop-shadow(0 0 26px color-mix(in srgb, var(--t-accent) 55%, transparent));
+/* Framed, cropped loop of the hype clip above the hero word — see
+   YouTubeBox. The iframe is oversized and centred so a landscape source
+   crops to fill this portrait frame like object-fit: cover would. */
+.splitMedia {
+  position: relative;
+  width: clamp(190px, 46vw, 300px);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  box-shadow: 0 30px 70px -25px rgb(0 0 0 / 0.75);
+}
+.splitMedia iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border: 0;
+}
+
+/* The sword-slash mark drawn across the split layout's hero word. */
+.heroTitleSlashed {
+  position: relative;
+}
+.wordSlash {
+  position: absolute;
+  left: -14%;
+  right: -14%;
+  top: 46%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #eaf6ff 15%, var(--t-accent) 50%, #eaf6ff 85%, transparent);
+  box-shadow:
+    0 0 10px 2px color-mix(in srgb, var(--t-accent) 75%, transparent),
+    0 0 22px 6px rgb(255 255 255 / 0.3);
+  transform: translateY(-50%) rotate(-9deg);
+  pointer-events: none;
 }
 
 .splitTagline {
