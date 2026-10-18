@@ -479,31 +479,28 @@
   pointer-events: none;
 }
 
-/* When a looping clip is supplied (login.split.media) it plays inside a
-   contained, portrait-framed box — NOT a full-bleed panel background —
-   sized/cropped to roughly match the reference layout. The frame itself
-   handles sizing; either YouTubeBox (see youtube-box.tsx/.module.css,
-   youtubeId variant) or the plain `<video>` below (.splitVideo, src
-   variant — a local file in /public, same crop treatment, no iframe quirks
-   to guard against) fills it edge-to-edge.
+/* When a looping clip is supplied (login.split.media), `.splitLeft` also
+   gets the `.splitLeftMedia` modifier (see below) and the clip plays inside
+   a cropped, rectangular "framed photo" box instead of the no-media
+   diagonal-stripe poster treatment — closer to the reference layout's
+   boxed/cropped clip than the previous heavily-feathered portrait blob.
+   The frame fills the space `.splitLeftMedia`'s padding carves out
+   (flex: 1 inside a column flex parent); either YouTubeBox (see
+   youtube-box.tsx/.module.css, youtubeId variant) or the plain `<video>`
+   below (.splitVideo, src variant — a local file in /public, same crop
+   treatment, no iframe quirks to guard against) fills it edge-to-edge.
 
-   No hard border/divider by design — the box is meant to blend into the
-   dark page background rather than read as a bordered card, so a radial
-   mask feathers all four edges to transparent (revealing the page behind)
-   instead of cutting off sharply. */
+   Crisp rectangular edges + a thin hairline border this time, by design —
+   it's meant to read as a deliberately cropped/framed card (like the
+   reference's boxed clip) rather than blend into the page. */
 .splitMediaFrame {
   position: relative;
   z-index: 0;
-  width: clamp(14rem, 64%, 21rem);
-  aspect-ratio: 0.82;
+  flex: 1;
+  width: 100%;
   overflow: hidden;
-  mask-image: radial-gradient(120% 120% at 50% 42%, #000 60%, transparent 100%);
-  -webkit-mask-image: radial-gradient(120% 120% at 50% 42%, #000 60%, transparent 100%);
-  /* Soft accent-coloured glow behind the frame. box-shadow renders outside
-     the box regardless of the frame's own `overflow: hidden`/mask, so it
-     isn't clipped — it's what keeps the feathered edges from just fading
-     into flat black. */
-  box-shadow: 0 0 90px 10px color-mix(in srgb, var(--t-accent) 40%, transparent);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.7);
 }
 /* Bottom scrim inside the frame so the overlapping hero word (see
    .splitContentOverlap) stays legible against the clip playing behind it. */
@@ -512,8 +509,27 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(180deg, rgb(5 5 6 / 0) 50%, rgb(5 5 6 / 0.85) 100%);
+  background: linear-gradient(180deg, rgb(5 5 6 / 0) 55%, rgb(5 5 6 / 0.88) 100%);
   pointer-events: none;
+}
+
+/* Modifier for `.splitLeft` when `login.split.media` is supplied: swaps the
+   no-media variant's centred/grounded composition (stripe + ghost mark,
+   content hugging the bottom-centre) for a left-aligned "framed photo card"
+   composition — the clip fills a rectangular inset box (.splitMediaFrame)
+   via flex: 1, and the hero word/tagline (.splitContentOverlap below)
+   overlap its bottom-left corner, bleeding left past the frame's edge onto
+   the plain dark panel background, the way the reference's wordmark bleeds
+   off its framed clip rather than sitting centred beneath it. */
+.splitLeftMedia {
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 3rem 1.5rem;
+}
+@media (min-width: 768px) {
+  .splitLeftMedia {
+    padding: 3.5rem 2.5rem;
+  }
 }
 
 /* Self-hosted alternative to YouTubeBox (see split.media's `src` variant) —
@@ -537,10 +553,19 @@
   align-items: center;
   gap: 1.5rem;
 }
-/* Pulled up to overlap the bottom edge of .splitMediaFrame, so the hero
-   word reads as sitting on top of the clip rather than stacked below it. */
+/* Sits centred over the lower half of .splitMediaFrame: absolutely
+   positioned against `.splitLeftMedia` (the nearest positioned ancestor),
+   horizontally centred and anchored up from the frame's bottom edge so the
+   hero word reads as composed over the clip rather than stacked below it. */
 .splitContentOverlap {
-  margin-top: -3.25rem;
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 90%;
+  align-items: center;
+  text-align: center;
 }
 
 .splitTagline {

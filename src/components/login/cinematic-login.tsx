@@ -72,7 +72,7 @@ function SplitPanels({
 }) {
   return (
     <div className={s.split}>
-      <section className={cn(s.splitLeft, s.e3)} aria-hidden>
+      <section className={cn(s.splitLeft, s.e3, split.media && s.splitLeftMedia)} aria-hidden>
         {split.media ? (
           <div className={s.splitMediaFrame}>
             {"youtubeId" in split.media ? (

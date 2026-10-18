@@ -50,20 +50,22 @@ export const onepercent: TenantConfig = {
     streakColor: "#ff8aa8",
     // No full-bleed ambient `video` here — the previous Sharingan YouTube
     // loop was dropped entirely. Omitting `video` falls back to
-    // .ambientFallback (an animated gradient), which is what actually
-    // shows behind the split panels now. public/tenants/onepercent/bg.mp4
-    // is left in place, unused, in case a video background is wanted
-    // again later.
+    // .ambientFallback (an animated gradient), which doesn't matter in
+    // practice while `split` (below) is set, since SplitPanels' own media
+    // frame is what actually renders on the left.
     //
-    // Two-panel split login (see LoginConfig.split doc), no `media` this
-    // time — the self-hosted rose clip tried earlier (split.mp4) was
-    // removed entirely, in favour of SplitPanels' stylized no-media
-    // fallback (diagonal accent band + giant hollow echo of the hero word
-    // behind the centred "1%" / tagline stack), closer in spirit to the
-    // bold poster-style course-card look the user pointed to as a style
-    // reference than a literal video panel.
+    // Two-panel split login (see LoginConfig.split doc). `media.src` points
+    // at a placeholder path — /assets/hero-bg.mp4 does not exist in the
+    // repo yet. This is intentional: the user is sourcing a properly
+    // licensed clip themselves and will drop it in at that path. Until
+    // then the <video> element 404s quietly and the frame just renders
+    // empty/black; nothing else depends on the file existing (build,
+    // typecheck, lint, tests all pass regardless). Swap this for a real
+    // public/... path once the licensed asset lands, same pattern as
+    // home.overlayVideo below.
     split: {
       tagline: "Private trading mentorship",
+      media: { src: "/assets/hero-bg.mp4" },
     },
   },
   memberLayout: "sidebar",
