@@ -59,6 +59,8 @@ export const onepercent: TenantConfig = {
     // Kilo-style compact pill Discord button instead of the classic
     // full-width block — see LoginConfig.compactButton doc.
     compactButton: true,
+    // Kilo-style smaller, tighter sign-in card — see LoginConfig.compactPanel doc.
+    compactPanel: true,
     // No full-bleed ambient `video` here — the previous Sharingan YouTube
     // loop was dropped entirely. Omitting `video` falls back to
     // .ambientFallback (an animated gradient), which doesn't matter in

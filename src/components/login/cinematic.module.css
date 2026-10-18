@@ -211,12 +211,21 @@
      exactly preserving the original two-tone dark vignette; when a
      tenant sets --page-bg (onepercent), both stops collapse to that one
      flat colour, so the blue-tinted glows above sit on a clean, even
-     off-white field instead of carrying over a dark-mode vignette. */
+     off-white field instead of carrying over a dark-mode vignette.
+
+     The two glow layers' opacity is parametrized via --cloud-opacity/-2
+     (falling back to the classic 28%/22% when unset) so a tenant can turn
+     up the "cloudiness" without affecting anyone else. A third glow layer
+     sits behind them, gated by --cloud-opacity-3 defaulting to 0% — fully
+     invisible unless a tenant explicitly opts in — for a denser, more
+     atmospheric blue haze (reference: Kilo's moody backdrop, recreated
+     here in a lighter, off-white key rather than Kilo's own dark one). */
   background:
-    radial-gradient(40% 50% at 20% 30%, color-mix(in srgb, var(--streak) 28%, transparent), transparent 70%),
-    radial-gradient(35% 45% at 80% 70%, color-mix(in srgb, var(--t-accent) 22%, transparent), transparent 70%),
+    radial-gradient(40% 50% at 20% 30%, color-mix(in srgb, var(--streak) var(--cloud-opacity, 28%), transparent), transparent 70%),
+    radial-gradient(35% 45% at 80% 70%, color-mix(in srgb, var(--t-accent) var(--cloud-opacity-2, 22%), transparent), transparent 70%),
+    radial-gradient(50% 55% at 50% 15%, color-mix(in srgb, var(--streak) var(--cloud-opacity-3, 0%), transparent), transparent 75%),
     radial-gradient(60% 60% at 50% 50%, var(--page-bg, #15161b), var(--page-bg, #050506));
-  background-size: 160% 160%, 160% 160%, 100% 100%;
+  background-size: 160% 160%, 160% 160%, 170% 170%, 100% 100%;
   animation: drift 18s ease-in-out infinite alternate;
 }
 
@@ -657,6 +666,25 @@
   .panel {
     padding: 2.75rem 2.5rem;
   }
+}
+
+/* Opt-in (LoginConfig.compactPanel) — narrower, tighter card than the
+   classic roomy panel, reference: Kilo's comparatively compact sign-in
+   card. Heading shrinks to match via the nested .signIn override below. */
+.panelCompact {
+  max-width: 21rem;
+  padding: 1.5rem 1.5rem;
+}
+@media (min-width: 768px) {
+  .panelCompact {
+    padding: 2rem 2rem;
+  }
+}
+.panelCompact .signIn {
+  font-size: 1.5rem;
+}
+.panelCompact .muted {
+  font-size: 0.875rem;
 }
 
 .signIn {

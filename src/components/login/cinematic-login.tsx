@@ -118,7 +118,7 @@ function SplitPanels({
       </section>
 
       <section className={cn(s.splitRight, s.e2)}>
-        <div className={s.panel}>
+        <div className={cn(s.panel, login.compactPanel && s.panelCompact)}>
           <h1 className={s.signIn}>Sign in</h1>
           <p className={s.muted}>{tenant.loginBlurb}</p>
           <div className={s.e4}>
@@ -159,7 +159,17 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
     // every cinematic.module.css rule that uses it falls back to the classic
     // near-black/near-white literal via var(--page-bg, <literal>), so a
     // tenant that never sets this (e.g. tempo) renders byte-for-byte the same.
-    ...(login.pageBg && isHexColor(login.pageBg) && { "--page-bg": login.pageBg }),
+    ...(login.pageBg &&
+      isHexColor(login.pageBg) && {
+        "--page-bg": login.pageBg,
+        // Denser, more atmospheric glow than the classic 28%/22% default —
+        // see cinematic.module.css's .ambientFallback doc. Scoped to the
+        // same pageBg opt-in so only a tenant already running the
+        // off-white scene picks this up.
+        "--cloud-opacity": "42%",
+        "--cloud-opacity-2": "34%",
+        "--cloud-opacity-3": "26%",
+      }),
     ...(login.pageInk && isHexColor(login.pageInk) && { "--page-ink": login.pageInk }),
   } as CSSProperties;
 
@@ -234,7 +244,7 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
               <p className={s.heroCaption}>{login.introSubtitle}</p>
             </section>
 
-            <div className={s.panel}>
+            <div className={cn(s.panel, login.compactPanel && s.panelCompact)}>
               <h1 className={cn(s.signIn, s.e2)}>Sign in</h1>
               <p className={cn(s.muted, s.e2)}>{tenant.loginBlurb}</p>
               <div className={s.e4}>

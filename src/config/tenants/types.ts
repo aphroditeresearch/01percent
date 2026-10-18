@@ -97,6 +97,13 @@ export type LoginConfig =
        */
       compactButton?: boolean;
       /**
+       * Opt-in: shrink the sign-in card itself (narrower max-width, tighter
+       * padding, smaller "Sign in" heading) instead of the classic roomier
+       * panel — reference: Kilo's comparatively compact card. Omit to keep
+       * the classic size (e.g. tempo).
+       */
+      compactPanel?: boolean;
+      /**
        * Full-bleed looping background clip behind the whole login scene.
        * Either a self-hosted file in /public (plain `<video>`, see
        * ambient-video.tsx) or a YouTube embed (IFrame Player API, see
