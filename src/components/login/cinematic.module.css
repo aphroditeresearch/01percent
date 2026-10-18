@@ -367,6 +367,55 @@
   text-align: center;
 }
 
+/* Clips .splitStripe/.splitMark below to the panel — both are sized
+   larger than it on purpose (so the stripe reaches edge-to-edge at an
+   angle, and the mark can bleed off the corner) and rely on this to not
+   blow out the page's layout width. */
+.splitLeft {
+  overflow: hidden;
+}
+
+/* No-media fallback (login.split.media omitted): a bold diagonal band in
+   the tenant's accent colour, standing in for a video panel without
+   requiring one — inspired by the diagonal colour-block treatment on
+   course/lesson poster cards elsewhere in the product, just applied here
+   instead of a flat empty panel. Sits behind .splitContent (z-index 2). */
+.splitStripe {
+  position: absolute;
+  inset: -15% -25%;
+  z-index: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 36%,
+    color-mix(in srgb, var(--t-accent) 90%, transparent) 47%,
+    color-mix(in srgb, var(--t-accent) 90%, transparent) 61%,
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+/* Giant hollow-outline echo of the hero word, bled off the panel's top
+   corner as a quiet watermark — same spirit as the big faint lesson
+   numeral on course cards, but built from the tenant's own wordmark
+   (via `login.heroWord`) instead of a hardcoded glyph, so it stays
+   generic/reusable rather than "1%"-specific. */
+.splitMark {
+  position: absolute;
+  z-index: 1;
+  top: -6%;
+  right: -4%;
+  font-family: var(--hero-font-family, var(--font-display));
+  font-stretch: var(--hero-font-stretch, var(--t-display-stretch));
+  font-weight: var(--hero-font-weight, var(--t-display-weight));
+  font-size: clamp(9rem, 30vw, 19rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(255 255 255 / 0.12);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* When a looping clip is supplied (login.split.media) it plays inside a
    contained, portrait-framed box — NOT a full-bleed panel background —
    sized/cropped to roughly match the reference layout. The frame itself

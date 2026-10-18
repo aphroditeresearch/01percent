@@ -49,24 +49,21 @@ export const onepercent: TenantConfig = {
     introSubtitle: "Private mentorship",
     streakColor: "#ff8aa8",
     // No full-bleed ambient `video` here — the previous Sharingan YouTube
-    // loop was dropped entirely in favour of the framed clip in
-    // `split.media` below. Omitting `video` falls back to .ambientFallback
-    // (an animated gradient), which is what actually shows behind the
-    // split panels now. public/tenants/onepercent/bg.mp4 is left in
-    // place, unused, in case a full-bleed clip is wanted again later.
+    // loop was dropped entirely. Omitting `video` falls back to
+    // .ambientFallback (an animated gradient), which is what actually
+    // shows behind the split panels now. public/tenants/onepercent/bg.mp4
+    // is left in place, unused, in case a video background is wanted
+    // again later.
     //
-    // Two-panel split login (see LoginConfig.split doc): a framed,
-    // cropped macro clip of a rose on the left, boxed Discord sign-in on
-    // the right — mirrors the reference layout the user pointed to
-    // (01kilo.com's portrait video panel + sign-in panel), with its own
-    // self-hosted red/pink clip instead of reusing that site's asset.
-    // "Rotating pink rose" by Mixkit (mixkit.co/free-stock-video/
-    // rotating-pink-rose-172) — Mixkit's free stock-video license, no
-    // attribution required; downloaded once to
-    // public/tenants/onepercent/split.mp4 rather than hotlinked.
+    // Two-panel split login (see LoginConfig.split doc), no `media` this
+    // time — the self-hosted rose clip tried earlier (split.mp4) was
+    // removed entirely, in favour of SplitPanels' stylized no-media
+    // fallback (diagonal accent band + giant hollow echo of the hero word
+    // behind the centred "1%" / tagline stack), closer in spirit to the
+    // bold poster-style course-card look the user pointed to as a style
+    // reference than a literal video panel.
     split: {
       tagline: "Private trading mentorship",
-      media: { src: "/tenants/onepercent/split.mp4", poster: "/tenants/onepercent/split-poster.jpg" },
     },
   },
   memberLayout: "sidebar",

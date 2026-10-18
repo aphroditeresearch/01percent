@@ -53,9 +53,13 @@ function Backdrop({ video }: { video: Cinematic["video"] }) {
  * Two-panel layout for `login.split`: when `split.media` is supplied, a
  * looping muted clip fills the whole left panel as a moving wallpaper (no
  * frame, no controls) with the hero word + tagline overlaid on its bottom
- * edge; without it, just the word + tagline centred. Boxed Discord sign-in
- * on the right, the pair cut by a diagonal seam line. Opt-in per tenant;
- * `CinematicLogin` falls back to the classic centred panel when omitted.
+ * edge. Without it, the left panel instead gets a stylized CSS-only
+ * treatment — a diagonal accent band plus a giant hollow-outline echo of
+ * the hero word behind the centred word + tagline stack — so it still
+ * reads as a deliberate poster-style panel rather than an empty box, with
+ * no video asset required. Boxed Discord sign-in on the right either way.
+ * Opt-in per tenant; `CinematicLogin` falls back to the classic centred
+ * panel when `split` itself is omitted.
  */
 function SplitPanels({
   tenant,
@@ -69,7 +73,7 @@ function SplitPanels({
   return (
     <div className={s.split}>
       <section className={cn(s.splitLeft, s.e3)} aria-hidden>
-        {split.media && (
+        {split.media ? (
           <div className={s.splitMediaFrame}>
             {"youtubeId" in split.media ? (
               <YouTubeBox youtubeId={split.media.youtubeId} />
@@ -86,6 +90,11 @@ function SplitPanels({
               />
             )}
           </div>
+        ) : (
+          <>
+            <div className={s.splitStripe} />
+            <span className={s.splitMark}>{login.heroWord}</span>
+          </>
         )}
         <div className={cn(s.splitContent, split.media && s.splitContentOverlap)}>
           <div className={s.heroTitle}>
