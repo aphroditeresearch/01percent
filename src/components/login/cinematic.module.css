@@ -367,6 +367,30 @@
   text-align: center;
 }
 
+/* Grounds the wordmark/tagline stack in the lower third of the panel
+   (padding-bottom pushes it up off the very edge) instead of dead-centre —
+   a more deliberate, poster-like composition closer to the reference,
+   rather than feeling like it's just floating in the middle of the frame. */
+.splitLeft {
+  justify-content: flex-end;
+  padding-bottom: 4.5rem;
+}
+
+/* Soft ambient colour bloom behind the sign-in card so .splitRight doesn't
+   read as flat empty black next to the busier hero panel — ties the two
+   halves' colour story together without needing a second video/image. */
+.splitRight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    46% 42% at 50% 50%,
+    color-mix(in srgb, var(--t-accent) 14%, transparent),
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
 /* Clips .splitStripe/.splitMark below to the panel — both are sized
    larger than it on purpose (so the stripe reaches edge-to-edge at an
    angle, and the mark can bleed off the corner) and rely on this to not
@@ -379,41 +403,80 @@
    the tenant's accent colour, standing in for a video panel without
    requiring one — inspired by the diagonal colour-block treatment on
    course/lesson poster cards elsewhere in the product, just applied here
-   instead of a flat empty panel. Sits behind .splitContent (z-index 2). */
+   instead of a flat empty panel. Sits behind .splitContent (z-index 2).
+   Built from hard colour stops (not a soft color-mix-to-transparent fade)
+   so the band reads as a crisp poster-style block with a razor diagonal
+   edge, the way the reference card's band does, rather than a blurred
+   glow — the only "soft" part is the ::before glow layered behind it. */
 .splitStripe {
   position: absolute;
-  inset: -15% -25%;
+  inset: -20% -30%;
   z-index: 0;
   background: linear-gradient(
     115deg,
-    transparent 36%,
-    color-mix(in srgb, var(--t-accent) 90%, transparent) 47%,
-    color-mix(in srgb, var(--t-accent) 90%, transparent) 61%,
-    transparent 72%
+    transparent 0%,
+    transparent 41%,
+    color-mix(in srgb, var(--t-accent) 60%, black) 43.5%,
+    var(--t-accent) 50%,
+    color-mix(in srgb, var(--t-accent) 60%, black) 56.5%,
+    transparent 59%,
+    transparent 100%
   );
   pointer-events: none;
 }
+/* Soft colour bloom around the band, kept as a separate layer behind it so
+   the band's own edges stay crisp while the panel still gets some ambient
+   glow instead of flat black either side of it. */
+.splitStripe::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    color-mix(in srgb, var(--t-accent) 35%, transparent) 50%,
+    transparent 70%
+  );
+  filter: blur(40px);
+}
 
-/* Giant hollow-outline echo of the hero word, bled off the panel's top
-   corner as a quiet watermark — same spirit as the big faint lesson
-   numeral on course cards, but built from the tenant's own wordmark
-   (via `login.heroWord`) instead of a hardcoded glyph, so it stays
+/* Giant hollow-outline echo of the hero word, bled almost entirely off the
+   panel's top edge so it reads as quiet background texture — same spirit
+   as the big faint lesson numeral on course cards, but kept clear of the
+   solid title + tagline stack below it (see .splitContent) instead of
+   overlapping it, and built from the tenant's own wordmark (via
+   `login.heroWord`) instead of a hardcoded glyph, so it stays
    generic/reusable rather than "1%"-specific. */
 .splitMark {
   position: absolute;
-  z-index: 1;
-  top: -6%;
-  right: -4%;
+  z-index: 0;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: var(--hero-font-family, var(--font-display));
   font-stretch: var(--hero-font-stretch, var(--t-display-stretch));
   font-weight: var(--hero-font-weight, var(--t-display-weight));
-  font-size: clamp(9rem, 30vw, 19rem);
+  font-size: clamp(11rem, 38vw, 24rem);
   line-height: 1;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgb(255 255 255 / 0.12);
+  -webkit-text-stroke: 1px rgb(255 255 255 / 0.06);
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
+}
+
+/* Thin accent-coloured edge along the bottom of the hero panel — a small,
+   deliberate "designed" detail (mirrors the accent rule under the course
+   card reference) that also helps the panel read as a single composed
+   poster rather than a stack of loose layers. */
+.splitLeft::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: var(--t-accent);
+  pointer-events: none;
 }
 
 /* When a looping clip is supplied (login.split.media) it plays inside a
@@ -482,19 +545,24 @@
 
 .splitTagline {
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.5em;
   text-transform: uppercase;
-  color: var(--t-muted);
+  color: rgb(255 255 255 / 0.82);
+  text-shadow: 0 1px 4px rgb(0 0 0 / 0.5);
 }
 
 .panel {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 26rem;
   border: 1px solid rgb(255 255 255 / 0.1);
+  border-left: 3px solid var(--t-accent);
   /* Solid-ish (not backdrop-filter: blur) so the card doesn't continuously
      re-blur the playing video behind it every frame. */
   background: rgb(10 11 14 / 0.88);
+  box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.6);
   padding: 2rem 1.5rem;
 }
 @media (min-width: 768px) {
