@@ -1,19 +1,26 @@
 import type { TenantConfig } from "./types";
 
 /**
- * "1%" — private trading mentorship brand. Same cinematic-login + sidebar +
- * sakura-dashboard shell as tempo.ts, same red/pink Japan palette and native
- * rays/shake/shutter launch intro, with no kana. Unlike tempo it opts into
- * `ambientPetals` (falling sakura instead of the halftone/streak backdrop)
- * and `login.split` (two-panel sign-in with a moving-wallpaper clip). This
- * file is the template for cloning a new tenant: copy it, swap the
- * colours/copy below, done.
+ * "1%" — private trading mentorship brand. A 1-for-1 structural replica of
+ * tempo.ts (same cinematic-login layout, same halftone/streak login
+ * backdrop, same native rays/shake/shutter launch intro, same sidebar +
+ * sakura-dashboard shell, same red/pink palette, same fonts) with every
+ * "Japan"-specific brand element swapped for "1%": wordmark text, hero
+ * word, ambient video asset. No kana — there's no Japanese-script
+ * equivalent for "1%", so that line is simply omitted rather than
+ * replaced. Earlier revisions of this tenant tried a two-panel split login
+ * and a distinct Anton wordmark font to stand apart from tempo visually;
+ * both were reverted so the two tenants are once again identical in
+ * design, differing only in brand text/colours-that-already-matched and
+ * the `booking` feature flag below. This file is the template for cloning
+ * a new tenant: copy it, swap the colours/copy, done.
  *
- * No `introVideo` here on purpose — that was a separate full-screen video
- * pre-roll layered on top of the cinematic login's own intro burst, which
- * read as a muddled double-intro / cross-fade. Omitting it means this
- * tenant's launch sequence is byte-for-byte the same code as tempo.ts (rays,
- * camera-shake, shutter slash) — see cinematic.module.css's `.intro`.
+ * No `introVideo` here, same as tempo.ts — that would be a separate
+ * full-screen video pre-roll layered on top of the cinematic login's own
+ * intro burst, which reads as a muddled double-intro / cross-fade.
+ * Omitting it keeps this tenant's launch sequence byte-for-byte the same
+ * code as tempo.ts (rays, camera-shake, shutter slash) — see
+ * cinematic.module.css's `.intro`.
  */
 export const onepercent: TenantConfig = {
   id: "tnt_onepercent",
@@ -23,9 +30,6 @@ export const onepercent: TenantConfig = {
   // here (and keep this one) once one exists.
   customDomains: ["01percent-aphrodite-research.vercel.app"],
   name: "1%",
-  // Brand reads as just "1%" everywhere (sidebar, cinematic header) — no
-  // "Mentorship" suffix in the lockup itself; "private mentorship" still
-  // appears as the tagline/subtitle copy around it.
   wordmark: "1%",
   tagline: "Private trading mentorship",
   loginBlurb: "Use the Discord account that holds your member role.",
@@ -46,27 +50,9 @@ export const onepercent: TenantConfig = {
   login: {
     style: "cinematic",
     heroWord: "1%",
-    // Distinct wordmark logotype — Anton, not the page's own Archivo
-    // headings — so the giant "1%" reads as a deliberate brand mark
-    // rather than just a scaled-up heading. See LoginConfig.heroFont doc.
-    heroFont: "anton",
     introSubtitle: "Private mentorship",
     streakColor: "#ff8aa8",
-    // No ambient background video supplied yet — the cinematic login falls
-    // back to its animated-gradient backdrop (see LoginConfig.video doc).
-    // Falling sakura petals instead of the default halftone/streak backdrop.
-    ambientPetals: true,
-    // Two-panel split: looping clip filling the left panel as a moving
-    // wallpaper, "1%" + tagline overlaid on it, Discord sign-in boxed on
-    // the right — opt-in, see LoginConfig.split doc. Self-hosted file
-    // (public/tenants/onepercent/split.mp4) rather than the earlier
-    // YouTube embed — avoids every iframe quirk (autoplay getting
-    // blocked, YouTube's native play/pause control flashing over the
-    // clip) since it's just a plain same-origin <video>.
-    split: {
-      tagline: "Private mentorship",
-      media: { src: "/tenants/onepercent/split.mp4" },
-    },
+    video: { ambient: "/tenants/onepercent/bg.mp4" },
   },
   memberLayout: "sidebar",
   home: { style: "sakura", petalColor: "#ff8aa8" },
