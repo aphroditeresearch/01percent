@@ -230,11 +230,12 @@
 }
 
 /* Opt-in (LoginConfig.cloudVideo) — real fog/cloud texture layered on top
-   of the gradient glow above, recoloured blue and blended so it reads as
-   drifting blue clouds instead of literal grey rain footage.
-   grayscale+sepia+hue-rotate is a classic duotone trick: grayscale strips
-   the source's own colour, sepia introduces one warm hue, and hue-rotate
-   spins that hue around to land on blue — easier to land on a specific
+   of the gradient glow above, recoloured via --cloud-hue (LoginConfig.
+   cloudHue) and blended so it reads as drifting coloured clouds instead of
+   literal grey rain footage. grayscale+sepia+hue-rotate is a classic
+   duotone trick: grayscale strips the source's own colour, sepia
+   introduces one warm hue, and hue-rotate spins that hue around to land
+   wherever a tenant's cloudHue points it — easier to land on a specific
    colour than pushing saturate/hue-rotate on the non-grayscale original.
    `multiply` keeps only the video's darker cloud/rain shapes visible
    against the page underneath; the radial mask fades it out toward the
@@ -252,7 +253,7 @@
   /* blur softens individual rain streaks into diffuse soft-edged smears —
      reads as drifting cloud/haze rather than literal "it's raining"
      texture, which is what the source footage actually is. */
-  filter: blur(10px) grayscale(1) brightness(1.8) sepia(1) hue-rotate(185deg) saturate(3);
+  filter: blur(10px) grayscale(1) brightness(1.8) sepia(1) hue-rotate(var(--cloud-hue, 185deg)) saturate(3);
   mix-blend-mode: multiply;
   mask-image: radial-gradient(70% 70% at 50% 40%, transparent 0%, white 100%);
   -webkit-mask-image: radial-gradient(70% 70% at 50% 40%, transparent 0%, white 100%);
@@ -595,7 +596,12 @@
 .splitMediaWrap {
   position: relative;
   width: 100%;
-  max-width: 26rem;
+  /* Bigger than the classic 26rem (reference: client request to give the
+     hero clip more visual weight against the now-compact sign-in panel —
+     see LoginConfig.compactPanel). Still just a max-width cap on a 100%-
+     wide, auto-margined box, so it stays centred in .splitLeftMedia and
+     shrinks gracefully on narrower columns instead of overflowing. */
+  max-width: 31rem;
   margin: 0 auto;
 }
 

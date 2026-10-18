@@ -2,15 +2,16 @@ import type { TenantConfig } from "./types";
 
 /**
  * "1%" — private trading mentorship brand. Same cinematic-login launch
- * sequence and sidebar + sakura-dashboard shell as tempo.ts, but its own
- * electric-blue/near-black accent palette (tempo.ts stays red/pink — this
- * tenant deliberately diverges, per client request) and its own two-panel
- * split login (see `login.split` below) instead of tempo's single centred
- * panel — a framed, cropped looping clip in a centred card on the left
- * next to the boxed Discord sign-in on the right. Every "Japan"-specific
- * brand element is swapped for "1%": wordmark text, hero word. No kana —
- * there's no Japanese-script equivalent for "1%", so that line is simply
- * omitted rather than replaced.
+ * sequence, sidebar + sakura-dashboard shell, and red/pink sakura accent
+ * family as tempo.ts (advanced-amd.com) — client asked for 1% to match
+ * that site's palette, just on a white page instead of tempo's dark one —
+ * but its own two-panel split login (see `login.split` below) instead of
+ * tempo's single centred panel — a framed, cropped looping clip in a
+ * centred card on the left next to the boxed Discord sign-in on the
+ * right. Every "Japan"-specific brand element is swapped for "1%":
+ * wordmark text, hero word. No kana — there's no Japanese-script
+ * equivalent for "1%", so that line is simply omitted rather than
+ * replaced.
  *
  * No `introVideo` here, same as tempo.ts — that would be a separate
  * full-screen video pre-roll layered on top of the cinematic login's own
@@ -37,7 +38,7 @@ export const onepercent: TenantConfig = {
     ink: "#f2f1ee",
     muted: "#8b8d94",
     line: "#2a2d34",
-    accent: "#2f6fed",
+    accent: "#ff3b5c",
     success: "#5bd68a",
     displayFont: "archivoWide",
     bodyFont: "plex",
@@ -48,13 +49,12 @@ export const onepercent: TenantConfig = {
     style: "cinematic",
     heroWord: "1%",
     introSubtitle: "Private mentorship",
-    streakColor: "#6aa1ff",
-    // Offwhite-with-a-blue-hue scene (client reference: Kilo's blue accent
-    // family, but on a light backdrop instead of Kilo's own dark one) —
+    streakColor: "#ff8aa8",
+    // White sakura scene in tempo's red/pink family (see file doc above) —
     // flips the intro rays to dark-on-light and the ambient backdrop to a
-    // clean off-white, while the framed media card and sign-in panel below
+    // clean white, while the framed media card and sign-in panel below
     // stay on their own dark surface (see LoginConfig.pageBg doc).
-    pageBg: "#f4f6fb",
+    pageBg: "#ffffff",
     pageInk: "#11131c",
     // Kilo-style compact pill Discord button instead of the classic
     // full-width block — see LoginConfig.compactButton doc.
@@ -62,10 +62,14 @@ export const onepercent: TenantConfig = {
     // Kilo-style smaller, tighter sign-in card — see LoginConfig.compactPanel doc.
     compactPanel: true,
     // Real drifting fog/cloud texture (source: a licensed Vecteezy rain/fog
-    // overlay clip), recoloured blue and blended on top of the
-    // .ambientFallback glow gradient — see LoginConfig.cloudVideo doc.
-    // Local file, muted, no controls, purely decorative.
+    // overlay clip), recoloured pinkish-red via cloudHue below and blended
+    // on top of the .ambientFallback glow gradient — see
+    // LoginConfig.cloudVideo doc. Local file, muted, no controls, purely
+    // decorative.
     cloudVideo: { src: "/tenants/onepercent/storm-clouds.mp4" },
+    // Lands the duotone recolour on a sakura red/pink instead of the
+    // default blue — see LoginConfig.cloudHue doc.
+    cloudHue: 330,
     // No full-bleed ambient `video` here — the previous Sharingan YouTube
     // loop was dropped entirely. Omitting `video` falls back to
     // .ambientFallback (an animated gradient), which doesn't matter in

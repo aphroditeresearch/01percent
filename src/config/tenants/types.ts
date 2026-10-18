@@ -129,18 +129,28 @@ export type LoginConfig =
       ambientPetals?: boolean;
       /**
        * Opt-in: an extra looping, muted texture clip layered INTO the
-       * backdrop on top of the `.ambientFallback` blue glow gradient (or
+       * backdrop on top of the `.ambientFallback` glow gradient (or
        * `video`, if also set) — see cinematic.module.css's `.cloudVideo`
-       * doc. Recolored blue via a CSS duotone filter and blended with
-       * `multiply` so only its darker cloud/fog shapes show, faded out
-       * toward the centre via a radial mask so it never muddies the
-       * panel area. Reference: Kilo's moody drifting-cloud backdrop,
+       * doc. Recoloured via a CSS duotone filter (see `cloudHue`) and
+       * blended with `multiply` so only its darker cloud/fog shapes show,
+       * faded out toward the centre via a radial mask so it never muddies
+       * the panel area. Reference: Kilo's moody drifting-cloud backdrop,
        * recreated here as real cloud texture instead of just soft gradient
-       * blobs, while keeping the scene in its off-white key (`pageBg`)
+       * blobs, while keeping the scene in its own page key (`pageBg`)
        * rather than Kilo's own dark one. Omit to keep just the gradient
        * glow (e.g. tempo, and onepercent before this was added).
        */
       cloudVideo?: { src: string; poster?: string };
+      /**
+       * Hue-rotate angle (degrees) for `cloudVideo`'s duotone recolour —
+       * see cinematic.module.css's `.cloudVideo` doc for how the filter
+       * chain lands on a colour. Tenants tune this by eye since the
+       * mapping from "desired colour" to a hue-rotate angle through a
+       * grayscale→sepia pass isn't a clean formula. Falls back to the
+       * classic blue (185deg) when omitted, so a tenant that sets
+       * `cloudVideo` without this still gets a sensible default.
+       */
+      cloudHue?: number;
       /**
        * Opt-in two-panel layout: brand word + emblem on the left, boxed
        * sign-in panel on the right. Omit for the classic single centred

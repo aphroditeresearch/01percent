@@ -171,6 +171,12 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
         "--cloud-opacity-3": "26%",
       }),
     ...(login.pageInk && isHexColor(login.pageInk) && { "--page-ink": login.pageInk }),
+    // Opt-in duotone recolour for `cloudVideo` — see LoginConfig.cloudHue
+    // doc. Independent of the pageBg block above (a tenant could in theory
+    // use cloudVideo without pageBg), only set when the tenant actually
+    // supplies an angle; .cloudVideo's own var() fallback (185deg, the
+    // classic blue) covers everyone else.
+    ...(login.cloudHue !== undefined && { "--cloud-hue": `${login.cloudHue}deg` }),
   } as CSSProperties;
 
   return (
