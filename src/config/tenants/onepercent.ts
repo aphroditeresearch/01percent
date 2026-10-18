@@ -1,20 +1,15 @@
 import type { TenantConfig } from "./types";
 
 /**
- * "1%" — private trading mentorship brand. A structural replica of
- * tempo.ts (same cinematic-login layout, same halftone/streak login
- * backdrop, same native rays/shake/shutter launch intro, same sidebar +
- * sakura-dashboard shell, same red/pink palette, same fonts) with every
- * "Japan"-specific brand element swapped for "1%": wordmark text, hero
- * word. No kana — there's no Japanese-script equivalent for "1%", so that
- * line is simply omitted rather than replaced. Earlier revisions of this
- * tenant tried a two-panel split login and a distinct Anton wordmark font
- * to stand apart from tempo visually; both were reverted so the two
- * tenants are identical in design except brand text/colours-that-already-
- * matched, the `booking` feature flag below, and the ambient background
- * clip (a YouTube embed here vs. tempo's local bg.mp4 file — see
- * LoginConfig.video doc). This file is the template for cloning a new
- * tenant: copy it, swap the colours/copy, done.
+ * "1%" — private trading mentorship brand. Same cinematic-login launch
+ * sequence, sidebar + sakura-dashboard shell, and red/pink palette as
+ * tempo.ts, but with its own two-panel split login (see `login.split`
+ * below) instead of tempo's single centred panel — a framed, cropped
+ * looping clip on the left next to the boxed Discord sign-in on the
+ * right. Every "Japan"-specific brand element is swapped for "1%":
+ * wordmark text, hero word. No kana — there's no Japanese-script
+ * equivalent for "1%", so that line is simply omitted rather than
+ * replaced.
  *
  * No `introVideo` here, same as tempo.ts — that would be a separate
  * full-screen video pre-roll layered on top of the cinematic login's own
@@ -53,14 +48,26 @@ export const onepercent: TenantConfig = {
     heroWord: "1%",
     introSubtitle: "Private mentorship",
     streakColor: "#ff8aa8",
-    // Full-bleed looping YouTube clip instead of a local file — see
-    // LoginConfig.video doc. "Sharingan Live Wallpaper - PC" by Phase
-    // (@PhaseFX) — a red spinning-eye loop that tracks the red/pink
-    // accent palette. Embedded via YouTube's own player (not downloaded/
-    // rehosted); confirmed free-to-use with the uploader/client.
-    // public/tenants/onepercent/bg.mp4 is left in place, unused, in case
-    // this reverts to a self-hosted clip later.
-    video: { youtubeId: "MqzkWz3zFfw" },
+    // No full-bleed ambient `video` here — the previous Sharingan YouTube
+    // loop was dropped entirely in favour of the framed clip in
+    // `split.media` below. Omitting `video` falls back to .ambientFallback
+    // (an animated gradient), which is what actually shows behind the
+    // split panels now. public/tenants/onepercent/bg.mp4 is left in
+    // place, unused, in case a full-bleed clip is wanted again later.
+    //
+    // Two-panel split login (see LoginConfig.split doc): a framed,
+    // cropped macro clip of a rose on the left, boxed Discord sign-in on
+    // the right — mirrors the reference layout the user pointed to
+    // (01kilo.com's portrait video panel + sign-in panel), with its own
+    // self-hosted red/pink clip instead of reusing that site's asset.
+    // "Rotating pink rose" by Mixkit (mixkit.co/free-stock-video/
+    // rotating-pink-rose-172) — Mixkit's free stock-video license, no
+    // attribution required; downloaded once to
+    // public/tenants/onepercent/split.mp4 rather than hotlinked.
+    split: {
+      tagline: "Private trading mentorship",
+      media: { src: "/tenants/onepercent/split.mp4", poster: "/tenants/onepercent/split-poster.jpg" },
+    },
   },
   memberLayout: "sidebar",
   // Member area (behind Home's modules, Library, Lessons, Homework,
