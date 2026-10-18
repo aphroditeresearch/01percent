@@ -89,6 +89,14 @@ export type LoginConfig =
       pageBg?: string;
       pageInk?: string;
       /**
+       * Opt-in: swap the classic full-width "Continue with Discord" button
+       * for a smaller, pill-shaped, intrinsic-width one in the tenant's
+       * accent colour (reference: Kilo's compact blue sign-in button) —
+       * sits left-aligned under the blurb instead of spanning the panel.
+       * Omit to keep the classic full-width block button (e.g. tempo).
+       */
+      compactButton?: boolean;
+      /**
        * Full-bleed looping background clip behind the whole login scene.
        * Either a self-hosted file in /public (plain `<video>`, see
        * ambient-video.tsx) or a YouTube embed (IFrame Player API, see

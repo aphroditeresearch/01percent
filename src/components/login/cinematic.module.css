@@ -697,6 +697,34 @@
   transform: translateY(1px);
 }
 
+/* Opt-in (LoginConfig.compactButton) — Kilo-style compact pill button:
+   intrinsic width instead of full-bleed block, solid accent fill with
+   white text by default (not just on :hover), left-aligned under the
+   blurb like the reference rather than spanning the panel. */
+.buttonCompact {
+  /* inline-flex (not the base rule's block-level flex) so the button
+     shrink-to-fits its content instead of stretching to the form's full
+     width — .button's own `display: flex` on a block box fills its
+     container by default regardless of `width: auto`. */
+  display: inline-flex;
+  width: auto;
+  margin-top: 1.5rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  background: var(--t-accent);
+  color: #fff;
+  font-size: 0.875rem;
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--t-accent) 70%, transparent);
+}
+.buttonCompact:hover {
+  background: color-mix(in srgb, var(--t-accent) 85%, white 15%);
+  color: #fff;
+}
+.buttonCompact svg {
+  width: 16px;
+  height: 16px;
+}
+
 .demoNote {
   margin-top: 1rem;
   font-size: 0.75rem;

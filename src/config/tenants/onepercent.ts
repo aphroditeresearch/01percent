@@ -56,6 +56,9 @@ export const onepercent: TenantConfig = {
     // stay on their own dark surface (see LoginConfig.pageBg doc).
     pageBg: "#f4f6fb",
     pageInk: "#11131c",
+    // Kilo-style compact pill Discord button instead of the classic
+    // full-width block — see LoginConfig.compactButton doc.
+    compactButton: true,
     // No full-bleed ambient `video` here — the previous Sharingan YouTube
     // loop was dropped entirely. Omitting `video` falls back to
     // .ambientFallback (an animated gradient), which doesn't matter in

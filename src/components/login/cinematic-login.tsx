@@ -124,7 +124,7 @@ function SplitPanels({
           <div className={s.e4}>
             {/* Demo: enters the sample portal. Real Discord OAuth arrives in Phase 2. */}
             <form action={enterDemo}>
-              <button type="submit" className={s.button}>
+              <button type="submit" className={cn(s.button, login.compactButton && s.buttonCompact)}>
                 <LoginIcon />
                 Continue with Discord
               </button>
@@ -240,7 +240,7 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
               <div className={s.e4}>
                 {/* Demo: enters the sample portal. Real Discord OAuth arrives in Phase 2. */}
                 <form action={enterDemo}>
-                  <button type="submit" className={s.button}>
+                  <button type="submit" className={cn(s.button, login.compactButton && s.buttonCompact)}>
                     <LoginIcon />
                     Continue with Discord
                   </button>
