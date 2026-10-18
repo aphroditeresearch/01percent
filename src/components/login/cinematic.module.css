@@ -337,20 +337,36 @@
 /* ───────── Split layout (login.split) ───────── */
 
 .mainSplit {
-  align-items: stretch;
-  padding: 0;
+  align-items: center;
+  padding: 2rem 1.25rem 3rem;
+}
+@media (min-width: 768px) {
+  .mainSplit {
+    padding: 3rem 2.5rem;
+  }
 }
 
+/* A single centred, bordered "card" (not an edge-to-edge panel) sitting on
+   the page's ambient blue/black backdrop — the composition the client
+   reference (Kilo) uses, rather than the two halves touching the viewport
+   edges. overflow: hidden + border-radius clip both child sections to
+   match, so the whole thing reads as one deliberately-framed unit. */
 .split {
   position: relative;
   display: flex;
-  flex: 1;
   width: 100%;
+  max-width: 68rem;
+  margin: 0 auto;
   flex-direction: column;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  box-shadow: 0 50px 140px -40px rgb(0 0 0 / 0.85);
 }
 @media (min-width: 768px) {
   .split {
     flex-direction: row;
+    min-height: 34rem;
   }
 }
 
@@ -468,8 +484,10 @@
 /* Thin accent-coloured edge along the bottom of the hero panel — a small,
    deliberate "designed" detail (mirrors the accent rule under the course
    card reference) that also helps the panel read as a single composed
-   poster rather than a stack of loose layers. */
-.splitLeft::after {
+   poster rather than a stack of loose layers. No-media fallback only —
+   the media/.splitLeftMedia variant gets its own framed-card look instead
+   (see .splitMediaFrame) and doesn't need this extra line. */
+.splitLeft:not(.splitLeftMedia)::after {
   content: "";
   position: absolute;
   z-index: 2;
@@ -479,26 +497,52 @@
   pointer-events: none;
 }
 
-/* When a looping clip is supplied (login.split.media), `.splitLeft` also
-   gets the `.splitLeftMedia` modifier (see below) and the clip plays inside
-   a cropped, rectangular "framed photo" box instead of the no-media
-   diagonal-stripe poster treatment — closer to the reference layout's
-   boxed/cropped clip than the previous heavily-feathered portrait blob.
-   The frame fills the space `.splitLeftMedia`'s padding carves out
-   (flex: 1 inside a column flex parent); either YouTubeBox (see
-   youtube-box.tsx/.module.css, youtubeId variant) or the plain `<video>`
-   below (.splitVideo, src variant — a local file in /public, same crop
-   treatment, no iframe quirks to guard against) fills it edge-to-edge.
+/* Modifier for `.splitLeft` when `login.split.media` is supplied: swaps the
+   no-media variant's grounded poster composition (stripe + ghost mark,
+   content hugging the bottom-centre of the whole panel) for a clip that
+   plays inside its own centred, self-contained card (.splitMediaWrap /
+   .splitMediaFrame below) — both axes centred so that card sits in the
+   middle of the panel rather than stretching to fill it. */
+.splitLeftMedia {
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+}
+@media (min-width: 768px) {
+  .splitLeftMedia {
+    padding: 3rem;
+  }
+}
 
-   Crisp rectangular edges + a thin hairline border this time, by design —
-   it's meant to read as a deliberately cropped/framed card (like the
-   reference's boxed clip) rather than blend into the page. */
+/* Sizing/positioning reference for the media card: .splitMediaFrame (the
+   visible box) and .splitContentOverlap (the hero word, absolutely
+   positioned) both anchor to THIS element rather than to the whole
+   .splitLeft panel, so the wordmark lines up with the frame's actual box
+   regardless of how much empty space .splitLeftMedia's centring leaves
+   around it. */
+.splitMediaWrap {
+  position: relative;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+}
+
+/* The clip plays inside a cropped, rounded "framed photo" card — closer to
+   the reference layout's boxed/cropped clip than a full-bleed background.
+   A fixed aspect-ratio (rather than flex: 1) keeps it a consistent,
+   self-contained size regardless of how `.split`'s own height is
+   determined, so it stays correct whether the card ends up taller/shorter
+   on different viewports. Either YouTubeBox (see youtube-box.tsx/.module.css,
+   youtubeId variant) or the plain `<video>` below (.splitVideo, src variant
+   — a local file in /public, same crop treatment, no iframe quirks to
+   guard against) fills it edge-to-edge. */
 .splitMediaFrame {
   position: relative;
   z-index: 0;
-  flex: 1;
   width: 100%;
+  aspect-ratio: 16 / 11;
   overflow: hidden;
+  border-radius: 0.75rem;
   border: 1px solid rgb(255 255 255 / 0.14);
   box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.7);
 }
@@ -511,25 +555,6 @@
   z-index: 1;
   background: linear-gradient(180deg, rgb(5 5 6 / 0) 55%, rgb(5 5 6 / 0.88) 100%);
   pointer-events: none;
-}
-
-/* Modifier for `.splitLeft` when `login.split.media` is supplied: swaps the
-   no-media variant's centred/grounded composition (stripe + ghost mark,
-   content hugging the bottom-centre) for a left-aligned "framed photo card"
-   composition — the clip fills a rectangular inset box (.splitMediaFrame)
-   via flex: 1, and the hero word/tagline (.splitContentOverlap below)
-   overlap its bottom-left corner, bleeding left past the frame's edge onto
-   the plain dark panel background, the way the reference's wordmark bleeds
-   off its framed clip rather than sitting centred beneath it. */
-.splitLeftMedia {
-  align-items: stretch;
-  justify-content: flex-start;
-  padding: 3rem 1.5rem;
-}
-@media (min-width: 768px) {
-  .splitLeftMedia {
-    padding: 3.5rem 2.5rem;
-  }
 }
 
 /* Self-hosted alternative to YouTubeBox (see split.media's `src` variant) —
@@ -554,9 +579,13 @@
   gap: 1.5rem;
 }
 /* Sits centred over the lower half of .splitMediaFrame: absolutely
-   positioned against `.splitLeftMedia` (the nearest positioned ancestor),
-   horizontally centred and anchored up from the frame's bottom edge so the
-   hero word reads as composed over the clip rather than stacked below it. */
+   positioned against `.splitMediaWrap` (its actual parent in the media
+   branch, and the nearest positioned ancestor — NOT the whole .splitLeft
+   panel), so it tracks the frame's real box exactly even though
+   .splitLeftMedia centres that box with empty space around it rather than
+   stretching it edge-to-edge. Horizontally centred, anchored up from the
+   frame's bottom edge, so the hero word reads as composed over the clip
+   rather than stacked below it. */
 .splitContentOverlap {
   position: absolute;
   left: 50%;

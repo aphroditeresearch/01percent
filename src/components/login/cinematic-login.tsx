@@ -70,39 +70,51 @@ function SplitPanels({
   login: Cinematic;
   split: NonNullable<Cinematic["split"]>;
 }) {
+  // Shared hero word + tagline block, reused by both branches below so the
+  // markup itself doesn't need duplicating — only its wrapper differs: a
+  // direct section child in the no-media fallback, or nested inside
+  // .splitMediaWrap (anchored to the video frame's own box, not the whole
+  // panel) when media is present. See .splitContentOverlap doc.
+  const content = (
+    <div className={cn(s.splitContent, split.media && s.splitContentOverlap)}>
+      <div className={s.heroTitle}>
+        <span className={s.heroWord}>{login.heroWord}</span>
+        {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
+      </div>
+      <p className={s.splitTagline}>{split.tagline}</p>
+    </div>
+  );
+
   return (
     <div className={s.split}>
       <section className={cn(s.splitLeft, s.e3, split.media && s.splitLeftMedia)} aria-hidden>
         {split.media ? (
-          <div className={s.splitMediaFrame}>
-            {"youtubeId" in split.media ? (
-              <YouTubeBox youtubeId={split.media.youtubeId} />
-            ) : (
-              <video
-                className={s.splitVideo}
-                src={split.media.src}
-                poster={split.media.poster}
-                autoPlay
-                muted
-                loop
-                playsInline
-                aria-hidden
-              />
-            )}
+          <div className={s.splitMediaWrap}>
+            <div className={s.splitMediaFrame}>
+              {"youtubeId" in split.media ? (
+                <YouTubeBox youtubeId={split.media.youtubeId} />
+              ) : (
+                <video
+                  className={s.splitVideo}
+                  src={split.media.src}
+                  poster={split.media.poster}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  aria-hidden
+                />
+              )}
+            </div>
+            {content}
           </div>
         ) : (
           <>
             <div className={s.splitStripe} />
             <span className={s.splitMark}>{login.heroWord}</span>
+            {content}
           </>
         )}
-        <div className={cn(s.splitContent, split.media && s.splitContentOverlap)}>
-          <div className={s.heroTitle}>
-            <span className={s.heroWord}>{login.heroWord}</span>
-            {login.heroKana && <span className={s.heroKana}>{login.heroKana}</span>}
-          </div>
-          <p className={s.splitTagline}>{split.tagline}</p>
-        </div>
       </section>
 
       <section className={cn(s.splitRight, s.e2)}>

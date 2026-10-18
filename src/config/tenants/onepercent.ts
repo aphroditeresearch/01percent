@@ -2,14 +2,15 @@ import type { TenantConfig } from "./types";
 
 /**
  * "1%" — private trading mentorship brand. Same cinematic-login launch
- * sequence, sidebar + sakura-dashboard shell, and red/pink palette as
- * tempo.ts, but with its own two-panel split login (see `login.split`
- * below) instead of tempo's single centred panel — a framed, cropped
- * looping clip on the left next to the boxed Discord sign-in on the
- * right. Every "Japan"-specific brand element is swapped for "1%":
- * wordmark text, hero word. No kana — there's no Japanese-script
- * equivalent for "1%", so that line is simply omitted rather than
- * replaced.
+ * sequence and sidebar + sakura-dashboard shell as tempo.ts, but its own
+ * electric-blue/near-black accent palette (tempo.ts stays red/pink — this
+ * tenant deliberately diverges, per client request) and its own two-panel
+ * split login (see `login.split` below) instead of tempo's single centred
+ * panel — a framed, cropped looping clip in a centred card on the left
+ * next to the boxed Discord sign-in on the right. Every "Japan"-specific
+ * brand element is swapped for "1%": wordmark text, hero word. No kana —
+ * there's no Japanese-script equivalent for "1%", so that line is simply
+ * omitted rather than replaced.
  *
  * No `introVideo` here, same as tempo.ts — that would be a separate
  * full-screen video pre-roll layered on top of the cinematic login's own
@@ -36,7 +37,7 @@ export const onepercent: TenantConfig = {
     ink: "#f2f1ee",
     muted: "#8b8d94",
     line: "#2a2d34",
-    accent: "#ff3b5c",
+    accent: "#2f6fed",
     success: "#5bd68a",
     displayFont: "archivoWide",
     bodyFont: "plex",
@@ -47,7 +48,7 @@ export const onepercent: TenantConfig = {
     style: "cinematic",
     heroWord: "1%",
     introSubtitle: "Private mentorship",
-    streakColor: "#ff8aa8",
+    streakColor: "#6aa1ff",
     // No full-bleed ambient `video` here — the previous Sharingan YouTube
     // loop was dropped entirely. Omitting `video` falls back to
     // .ambientFallback (an animated gradient), which doesn't matter in
