@@ -54,9 +54,13 @@ export const onepercent: TenantConfig = {
     introSubtitle: "Private mentorship",
     streakColor: "#ff8aa8",
     // Full-bleed looping YouTube clip instead of a local file — see
-    // LoginConfig.video doc. public/tenants/onepercent/bg.mp4 is left in
-    // place, unused, in case this reverts to a self-hosted clip later.
-    video: { youtubeId: "mY7ZjmwowXM" },
+    // LoginConfig.video doc. "Sharingan Live Wallpaper - PC" by Phase
+    // (@PhaseFX) — a red spinning-eye loop that tracks the red/pink
+    // accent palette. Embedded via YouTube's own player (not downloaded/
+    // rehosted); confirmed free-to-use with the uploader/client.
+    // public/tenants/onepercent/bg.mp4 is left in place, unused, in case
+    // this reverts to a self-hosted clip later.
+    video: { youtubeId: "MqzkWz3zFfw" },
   },
   memberLayout: "sidebar",
   home: { style: "sakura", petalColor: "#ff8aa8" },
