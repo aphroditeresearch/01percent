@@ -1,19 +1,20 @@
 import type { TenantConfig } from "./types";
 
 /**
- * "1%" — private trading mentorship brand. A 1-for-1 structural replica of
+ * "1%" — private trading mentorship brand. A structural replica of
  * tempo.ts (same cinematic-login layout, same halftone/streak login
  * backdrop, same native rays/shake/shutter launch intro, same sidebar +
  * sakura-dashboard shell, same red/pink palette, same fonts) with every
  * "Japan"-specific brand element swapped for "1%": wordmark text, hero
- * word, ambient video asset. No kana — there's no Japanese-script
- * equivalent for "1%", so that line is simply omitted rather than
- * replaced. Earlier revisions of this tenant tried a two-panel split login
- * and a distinct Anton wordmark font to stand apart from tempo visually;
- * both were reverted so the two tenants are once again identical in
- * design, differing only in brand text/colours-that-already-matched and
- * the `booking` feature flag below. This file is the template for cloning
- * a new tenant: copy it, swap the colours/copy, done.
+ * word. No kana — there's no Japanese-script equivalent for "1%", so that
+ * line is simply omitted rather than replaced. Earlier revisions of this
+ * tenant tried a two-panel split login and a distinct Anton wordmark font
+ * to stand apart from tempo visually; both were reverted so the two
+ * tenants are identical in design except brand text/colours-that-already-
+ * matched, the `booking` feature flag below, and the ambient background
+ * clip (a YouTube embed here vs. tempo's local bg.mp4 file — see
+ * LoginConfig.video doc). This file is the template for cloning a new
+ * tenant: copy it, swap the colours/copy, done.
  *
  * No `introVideo` here, same as tempo.ts — that would be a separate
  * full-screen video pre-roll layered on top of the cinematic login's own
@@ -52,7 +53,10 @@ export const onepercent: TenantConfig = {
     heroWord: "1%",
     introSubtitle: "Private mentorship",
     streakColor: "#ff8aa8",
-    video: { ambient: "/tenants/onepercent/bg.mp4" },
+    // Full-bleed looping YouTube clip instead of a local file — see
+    // LoginConfig.video doc. public/tenants/onepercent/bg.mp4 is left in
+    // place, unused, in case this reverts to a self-hosted clip later.
+    video: { youtubeId: "mY7ZjmwowXM" },
   },
   memberLayout: "sidebar",
   home: { style: "sakura", petalColor: "#ff8aa8" },

@@ -74,10 +74,15 @@ export type LoginConfig =
       /** Second accent colour for streaks, #rrggbb. */
       streakColor: string;
       /**
-       * Background videos in /public, supplied by the client. When omitted an
-       * animated gradient stands in, so the page still works without assets.
+       * Full-bleed looping background clip behind the whole login scene.
+       * Either a self-hosted file in /public (plain `<video>`, see
+       * ambient-video.tsx) or a YouTube embed (IFrame Player API, see
+       * youtube-box.tsx — same autoplay-blocked/native-controls handling
+       * used for `split.media`'s youtubeId variant). When omitted an
+       * animated gradient stands in, so the page still works without
+       * assets.
        */
-      video?: { ambient: string; poster?: string };
+      video?: { ambient: string; poster?: string } | { youtubeId: string };
       /**
        * Optional ambient audio played via the official YouTube IFrame Player
        * API once the sign-in panel is visible. No video is downloaded or

@@ -33,8 +33,20 @@ function LoginIcon() {
   );
 }
 
-function Backdrop({ src, poster }: { src?: string; poster?: string }) {
-  return src ? <AmbientVideo src={src} poster={poster} /> : <div className={s.ambientFallback} aria-hidden />;
+function Backdrop({ video }: { video: Cinematic["video"] }) {
+  if (!video) return <div className={s.ambientFallback} aria-hidden />;
+  if ("youtubeId" in video) {
+    // Same full-bleed cover-crop wrapper AmbientVideo uses for a file
+    // source, just around YouTubeBox instead of a plain <video> — keeps
+    // the dimming opacity consistent regardless of which source a tenant
+    // configures.
+    return (
+      <div className={s.ambientVideo} aria-hidden>
+        <YouTubeBox youtubeId={video.youtubeId} />
+      </div>
+    );
+  }
+  return <AmbientVideo src={video.ambient} poster={video.poster} />;
 }
 
 /**
@@ -158,7 +170,7 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
       </div>
 
       <div className={s.ambient} aria-hidden>
-        <Backdrop src={login.video?.ambient} poster={login.video?.poster} />
+        <Backdrop video={login.video} />
         <div className={s.shade} />
         {login.ambientPetals ? (
           <PetalField tenant={tenant} />
