@@ -26,18 +26,31 @@ const BRANCH_BLOOMS = [
 ];
 
 /**
- * Falling sakura petals + a blossom-branch corner flourish, fixed behind
- * every page's content. Opt in per tenant via `home: { style: "sakura" }`
- * (see tempo.ts / onepercent.ts) — tenants that omit it render nothing here,
- * same as before this existed. Previously this lived only on the dashboard
- * (sakura-dashboard.tsx); it's now rendered once in SidebarShell so the
- * theme carries across Library, Lessons, Homework, Journal, Booking and
- * Account too, not just Home.
+ * Decorative layer fixed behind every page's content (not just Home — it's
+ * rendered once in SidebarShell so the theme carries across Library,
+ * Lessons, Homework, Journal, Booking and Account too). Opt in per tenant
+ * via `home: { style: "sakura" }` — tenants that omit it render nothing
+ * here. Two variants:
+ * - Default: falling sakura petals + a blossom-branch corner flourish (see
+ *   tempo.ts).
+ * - `home.overlayVideo` set: flat black background + a looping blend-mode
+ *   video instead (see onepercent.ts, HomeConfig.overlayVideo doc).
  */
 export function PetalField({ tenant }: { tenant: TenantConfig }) {
   if (tenant.home?.style !== "sakura") return null;
   const color = tenant.home.petalColor && isHexColor(tenant.home.petalColor) ? tenant.home.petalColor : tenant.theme.accent;
   const vars = { "--petal": color } as CSSProperties;
+
+  // Opt-in replacement for the whole decorative layer below: solid black,
+  // plus a blend-mode video in the same fixed/behind-content slot, instead
+  // of the petal/glow/branch graphic. See HomeConfig.overlayVideo doc.
+  if (tenant.home.overlayVideo) {
+    return (
+      <div className={s.fieldVideo} aria-hidden>
+        <video className={s.overlayVideo} src={tenant.home.overlayVideo.src} autoPlay muted loop playsInline />
+      </div>
+    );
+  }
 
   return (
     <div className={s.field} aria-hidden>

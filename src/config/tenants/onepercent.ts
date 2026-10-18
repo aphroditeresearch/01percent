@@ -63,7 +63,11 @@ export const onepercent: TenantConfig = {
     video: { youtubeId: "MqzkWz3zFfw" },
   },
   memberLayout: "sidebar",
-  home: { style: "sakura", petalColor: "#ff8aa8" },
+  // Member area (behind Home's modules, Library, Lessons, Homework,
+  // Journal, Booking, Account): flat black backdrop with a looping
+  // dry-leaves clip screen-blended on top instead of tempo's drifting
+  // sakura petals — see HomeConfig.overlayVideo doc.
+  home: { style: "sakura", petalColor: "#ff8aa8", overlayVideo: { src: "/tenants/onepercent/leaves-overlay.mp4" } },
   features: {
     courses: true,
     announcements: true,

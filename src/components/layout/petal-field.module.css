@@ -17,6 +17,33 @@
   pointer-events: none;
 }
 
+/* home.overlayVideo variant — same fixed/behind-content slot as .field,
+   but a flat black base instead of the page's usual (near-black) theme
+   background, so there's nothing but the video's own bright content
+   visible once it's screen-blended on top. */
+.fieldVideo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #000;
+}
+
+/* `mix-blend-mode: screen` treats black pixels in the source clip as a
+   no-op against the black .fieldVideo base behind it, so a clip authored
+   as "bright content on a black background" (the common free-stock-video
+   trick for a transparency-less "transparent" overlay) reads as just its
+   bright content floating on black, with no visible clip boundary/crop. */
+.overlayVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: screen;
+}
+
 .glow {
   position: absolute;
   border-radius: 9999px;

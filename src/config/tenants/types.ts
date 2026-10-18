@@ -133,6 +133,17 @@ export type HomeConfig =
       style: "sakura";
       /** Petal colour, #rrggbb. Falls back to theme.accent if omitted. */
       petalColor?: string;
+      /**
+       * Opt-in: replace the drifting CSS-petal/branch backdrop with a flat
+       * black background plus a looping video overlay composited with
+       * `mix-blend-mode: screen` (so a clip authored with bright content on
+       * a black "transparent" background only shows its bright content —
+       * see petal-field.tsx). Fixed behind every member page's content,
+       * same slot the petals otherwise occupy, so it never sits above or
+       * interferes with the dashboard's module cards. Local file in
+       * /public. Omit to keep the classic CSS petals (e.g. tempo).
+       */
+      overlayVideo?: { src: string };
     };
 
 export interface TenantConfig {
