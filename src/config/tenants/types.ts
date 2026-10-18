@@ -59,6 +59,16 @@ export type LoginConfig =
       heroWord: string;
       /** Optional secondary script under the hero word (e.g. katakana). */
       heroKana?: string;
+      /**
+       * Opt-in: use a different DisplayFont than `theme.displayFont` for the
+       * brand word mark specifically — the header wordmark, the intro burst
+       * title, and the hero word on the sign-in panel (all three stay in
+       * sync). Lets the "1%"/"KILO"-style giant wordmark read as a distinct,
+       * deliberate logotype instead of just reusing whatever font the rest
+       * of the page's headings use. Omit to keep the classic behaviour
+       * (wordmark matches `theme.displayFont` everywhere, e.g. tempo).
+       */
+      heroFont?: DisplayFont;
       /** Small caps line shown during the intro. */
       introSubtitle: string;
       /** Second accent colour for streaks, #rrggbb. */
@@ -84,19 +94,25 @@ export type LoginConfig =
       ambientPetals?: boolean;
       /**
        * Opt-in two-panel layout: brand word + emblem on the left, boxed
-       * sign-in panel on the right, divided by a diagonal seam line. Omit
-       * for the classic single centred panel (e.g. tempo) — nothing
-       * changes there. See cinematic-login.tsx's `SplitPanels`.
+       * sign-in panel on the right. Omit for the classic single centred
+       * panel (e.g. tempo) — nothing changes there. See
+       * cinematic-login.tsx's `SplitPanels`.
        */
       split?: {
         /** Line shown under the hero word on the left panel, e.g. "Private mentorship". */
         tagline: string;
         /**
-         * Optional looping, muted YouTube clip shown in a framed box above
-         * the hero word on the left panel. Purely decorative — no audio, no
-         * controls. Omit for just the emblem/word/tagline stack.
+         * Optional looping, muted clip shown in a framed box above the hero
+         * word on the left panel. Purely decorative — no audio, no controls.
+         * Omit for just the emblem/word/tagline stack. Either a YouTube
+         * embed (driven by the IFrame Player API, see youtube-box.tsx) or a
+         * self-hosted file in /public (plain `<video>`, see
+         * ambient-video.tsx's sibling in SplitPanels) — a local file avoids
+         * every YouTube-specific quirk (autoplay being blocked, the native
+         * play/pause control flashing over the clip) since it's just a
+         * same-origin video element, so prefer it when a clip is available.
          */
-        media?: { youtubeId: string };
+        media?: { youtubeId: string } | { src: string; poster?: string };
       };
     };
 

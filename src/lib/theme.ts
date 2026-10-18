@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import type { TenantTheme } from "@/config/tenants";
+import type { DisplayFont, TenantTheme } from "@/config/tenants";
 
 const HEX = /^#[0-9a-f]{6}$/i;
 
@@ -17,12 +17,15 @@ const COLOR_VARS = {
   success: "--t-success",
 } as const satisfies Partial<Record<keyof TenantTheme, string>>;
 
-const DISPLAY_FONT = {
+/** Exported so callers that need a one-off DisplayFont override for a single
+ * element (e.g. the cinematic login's `heroFont`) can reuse the same
+ * family/weight/stretch mapping instead of duplicating it. */
+export const DISPLAY_FONT = {
   anton: { family: "var(--font-anton)", weight: "400", stretch: "normal" },
   fraunces: { family: "var(--font-fraunces)", weight: "500", stretch: "normal" },
   // Archivo at its widest, heaviest setting.
   archivoWide: { family: "var(--font-archivo)", weight: "900", stretch: "125%" },
-} as const;
+} as const satisfies Record<DisplayFont, { family: string; weight: string; stretch: string }>;
 
 const BODY_FONT_VAR = {
   inter: "var(--font-inter)",

@@ -5,6 +5,12 @@ import { cn } from "@/lib/cn";
 import { loadYouTubeApi, type YTPlayer } from "@/lib/youtube";
 import s from "./youtube-box.module.css";
 
+// YouTube IFrame API player states we care about — see
+// https://developers.google.com/youtube/iframe_api_reference#Playback_status
+const YT_STATE_PLAYING = 1;
+const YT_STATE_PAUSED = 2;
+const YT_STATE_CUED = 5;
+
 /**
  * Framed, cropped, looping YouTube clip for the split-login's left panel
  * (see `cinematic-login.tsx`'s `SplitPanels`). Muted/no-controls/no-audio —
@@ -31,6 +37,17 @@ import s from "./youtube-box.module.css";
  * On top of that, a transparent guard pane (see youtube-box.module.css)
  * sits above the generated iframe so no mouse/hover event reaches its
  * document at the DOM level at all — belt and suspenders.
+ *
+ * A third thing this guards against: even with `playVideo()` called
+ * explicitly, autoplay can still get blocked (network conditions, browser
+ * policy, an extension, whatever) — when that happens YouTube renders its
+ * own static thumbnail with a big centre play button, which reads as
+ * exactly the "stuck showing a play/pause button over a photo" bug this
+ * was built to avoid. So the iframe stays at opacity 0, with YouTube's own
+ * still thumbnail shown underneath instead, until `onStateChange` actually
+ * reports PLAYING — only then does the real (controls-free, guarded)
+ * video fade in. Worst case, the user sees a plain static photo with zero
+ * chrome; best case, the looping clip. Either way, no play button.
  *
  * The source clip is landscape; the box is a portrait frame, so the iframe
  * is oversized and centred inside an `overflow: hidden` parent to crop it
@@ -68,7 +85,9 @@ export function YouTubeBox({ youtubeId, className }: { youtubeId: string; classN
             // The API replaces `host` with its own <iframe>, which does not
             // inherit `host`'s class — restyle it directly so it fills and
             // crops to the frame, and trim its permissions policy down to
-            // exactly what muted background playback needs.
+            // exactly what muted background playback needs. Starts at
+            // opacity 0 (see .iframe) — .iframeVisible is added once
+            // onStateChange actually confirms playback.
             const iframe = event.target.getIframe();
             iframe.className = s.iframe;
             iframe.tabIndex = -1;
@@ -76,6 +95,19 @@ export function YouTubeBox({ youtubeId, className }: { youtubeId: string; classN
             iframe.setAttribute("allow", "autoplay");
             event.target.mute();
             event.target.playVideo();
+          },
+          onStateChange: (event) => {
+            const iframe = event.target.getIframe();
+            if (event.data === YT_STATE_PLAYING) {
+              iframe.classList.add(s.iframeVisible);
+            } else if (event.data === YT_STATE_PAUSED || event.data === YT_STATE_CUED) {
+              // Autoplay didn't take the first time (or got paused) — nudge
+              // it again rather than leaving YouTube's own paused-thumbnail
+              // play button showing; the still-transparent iframe keeps that
+              // hidden behind the poster below either way, but no reason
+              // not to keep trying to actually get it moving.
+              event.target.playVideo();
+            }
           },
         },
       });
@@ -89,6 +121,12 @@ export function YouTubeBox({ youtubeId, className }: { youtubeId: string; classN
 
   return (
     <div className={cn(s.wrap, className)} aria-hidden>
+      {/* YouTube's own static thumbnail, shown until real playback is
+          confirmed — see the big comment above for why. */}
+      <div
+        className={s.poster}
+        style={{ backgroundImage: `url(https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg)` }}
+      />
       <div ref={hostRef} />
       <div className={s.guard} />
     </div>

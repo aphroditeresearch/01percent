@@ -4,7 +4,7 @@ import { enterDemo } from "@/app/login/actions";
 import { PetalField } from "@/components/layout/petal-field";
 import { burstLines } from "@/lib/burst";
 import { cn } from "@/lib/cn";
-import { isHexColor } from "@/lib/theme";
+import { DISPLAY_FONT, isHexColor } from "@/lib/theme";
 import { AmbientAudio } from "./ambient-audio";
 import { AmbientVideo } from "./ambient-video";
 import { YouTubeBox } from "./youtube-box";
@@ -56,12 +56,23 @@ function SplitPanels({
 }) {
   return (
     <div className={s.split}>
-      <div className={s.seamLine} aria-hidden />
-
       <section className={cn(s.splitLeft, s.e3)} aria-hidden>
         {split.media && (
           <div className={s.splitMediaFrame}>
-            <YouTubeBox youtubeId={split.media.youtubeId} />
+            {"youtubeId" in split.media ? (
+              <YouTubeBox youtubeId={split.media.youtubeId} />
+            ) : (
+              <video
+                className={s.splitVideo}
+                src={split.media.src}
+                poster={split.media.poster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                aria-hidden
+              />
+            )}
           </div>
         )}
         <div className={cn(s.splitContent, split.media && s.splitContentOverlap)}>
@@ -97,8 +108,19 @@ function SplitPanels({
 }
 
 export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login: Cinematic }) {
+  // Opt-in override for the brand word mark's font (header wordmark, intro
+  // burst title, split-login hero word) — see LoginConfig.heroFont doc.
+  // When omitted, .heroWord/.introWord/.wordmark fall back to the tenant's
+  // usual --font-display/--t-display-weight/--t-display-stretch tokens via
+  // CSS var() defaults, so tempo (which never sets this) is unaffected.
+  const heroFont = login.heroFont ? DISPLAY_FONT[login.heroFont] : undefined;
   const style = {
     "--streak": isHexColor(login.streakColor) ? login.streakColor : tenant.theme.accent,
+    ...(heroFont && {
+      "--hero-font-family": heroFont.family,
+      "--hero-font-weight": heroFont.weight,
+      "--hero-font-stretch": heroFont.stretch,
+    }),
   } as CSSProperties;
 
   return (

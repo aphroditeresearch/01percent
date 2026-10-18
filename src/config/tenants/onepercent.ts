@@ -46,6 +46,10 @@ export const onepercent: TenantConfig = {
   login: {
     style: "cinematic",
     heroWord: "1%",
+    // Distinct wordmark logotype — Anton, not the page's own Archivo
+    // headings — so the giant "1%" reads as a deliberate brand mark
+    // rather than just a scaled-up heading. See LoginConfig.heroFont doc.
+    heroFont: "anton",
     introSubtitle: "Private mentorship",
     streakColor: "#ff8aa8",
     // No ambient background video supplied yet — the cinematic login falls
@@ -54,10 +58,14 @@ export const onepercent: TenantConfig = {
     ambientPetals: true,
     // Two-panel split: looping clip filling the left panel as a moving
     // wallpaper, "1%" + tagline overlaid on it, Discord sign-in boxed on
-    // the right, cut by a diagonal seam — opt-in, see LoginConfig.split doc.
+    // the right — opt-in, see LoginConfig.split doc. Self-hosted file
+    // (public/tenants/onepercent/split.mp4) rather than the earlier
+    // YouTube embed — avoids every iframe quirk (autoplay getting
+    // blocked, YouTube's native play/pause control flashing over the
+    // clip) since it's just a plain same-origin <video>.
     split: {
       tagline: "Private mentorship",
-      media: { youtubeId: "-5RVEKRfbsY" },
+      media: { src: "/tenants/onepercent/split.mp4" },
     },
   },
   memberLayout: "sidebar",
