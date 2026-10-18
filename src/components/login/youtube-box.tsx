@@ -54,6 +54,15 @@ const YT_STATE_CUED = 5;
  * like `object-fit: cover` would for a plain <video> (see .splitMediaFrame
  * in cinematic.module.css, which sizes this component from the outside via
  * `className`).
+ *
+ * Quality: the embedded player's "auto" algorithm picks a rendition sized
+ * to whatever the player's DECLARED size is — which defaults to a tiny
+ * 640×390 if left unset, capping the stream at a correspondingly blurry
+ * rendition no matter how large .iframe's CSS then stretches it. Fixed by
+ * passing the actual (oversized, DPR-scaled) on-screen size into the
+ * Player constructor below, so a clip with a real 4K source has a shot at
+ * actually streaming near 4K instead of being invisibly capped at 480p
+ * then upscaled 3x by CSS on top of that.
  */
 export function YouTubeBox({ youtubeId, className }: { youtubeId: string; className?: string }) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -66,7 +75,22 @@ export function YouTubeBox({ youtubeId, className }: { youtubeId: string; classN
 
     loadYouTubeApi().then(() => {
       if (cancelled || !window.YT) return;
+      // Quality negotiates against the DECLARED player size, not whatever
+      // size .iframe's CSS later stretches it to — see the width/height
+      // doc on YTPlayerOptions. Measure `.wrap` (host's parent; host itself
+      // is an empty, unsized div the API is about to replace) rather than
+      // `host`, times 3 to match .iframe's 300% cover-crop oversize, times
+      // devicePixelRatio so retina/4K screens actually request a 4K-ish
+      // rendition instead of a 1x-css-pixel one. Capped at 4K either way —
+      // no available YouTube rendition is sharper than that regardless of
+      // how large this plays on screen.
+      const box = host.parentElement?.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const width = Math.min(3840, Math.round((box?.width || window.innerWidth) * 3 * dpr));
+      const height = Math.min(2160, Math.round((box?.height || window.innerHeight) * 3 * dpr));
       playerRef.current = new window.YT.Player(host, {
+        width,
+        height,
         videoId: youtubeId,
         playerVars: {
           autoplay: 1,
@@ -95,6 +119,11 @@ export function YouTubeBox({ youtubeId, className }: { youtubeId: string; classN
             iframe.setAttribute("allow", "autoplay");
             event.target.mute();
             event.target.playVideo();
+            // Officially a no-op on today's embedded player (YouTube's
+            // auto-quality algorithm overrides it), but harmless, and the
+            // real fix — the width/height passed into the Player
+            // constructor above — is what actually moves the needle.
+            event.target.setPlaybackQuality?.("hd2160");
           },
           onStateChange: (event) => {
             const iframe = event.target.getIframe();

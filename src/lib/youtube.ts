@@ -18,6 +18,13 @@ export interface YTPlayer {
   unMute(): void;
   destroy(): void;
   getIframe(): HTMLIFrameElement;
+  /**
+   * Deprecated by YouTube (manual quality selection has had no effect on
+   * the embedded player's actual auto-quality algorithm since ~2015) but
+   * harmless to call — see youtube-box.tsx's `width`/`height` comment for
+   * the knob that still matters.
+   */
+  setPlaybackQuality?(quality: string): void;
 }
 
 export interface YTPlayerReadyEvent {
@@ -26,6 +33,18 @@ export interface YTPlayerReadyEvent {
 
 export interface YTPlayerOptions {
   videoId: string;
+  /**
+   * Initial declared player size. YouTube's "auto" quality algorithm picks
+   * the smallest available rendition that still covers the player's own
+   * reported element size (bandwidth permitting) — leaving this unset
+   * defaults to a tiny 640×390, which caps the stream at a correspondingly
+   * low rendition no matter how large the iframe is then stretched via
+   * CSS afterwards. Callers that scale the generated iframe up via CSS
+   * (see youtube-box.tsx) should pass the actual on-screen size here too,
+   * or quality negotiates against the wrong (much smaller) number.
+   */
+  width?: number;
+  height?: number;
   playerVars?: {
     start?: number;
     autoplay?: 0 | 1;
