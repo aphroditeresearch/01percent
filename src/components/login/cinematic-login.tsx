@@ -209,6 +209,18 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
 
       <div className={s.ambient} aria-hidden>
         <Backdrop video={login.video} />
+        {login.cloudVideo && (
+          <video
+            className={s.cloudVideo}
+            src={login.cloudVideo.src}
+            poster={login.cloudVideo.poster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden
+          />
+        )}
         <div className={s.shade} />
         {login.ambientPetals ? (
           <PetalField tenant={tenant} />

@@ -128,6 +128,20 @@ export type LoginConfig =
        */
       ambientPetals?: boolean;
       /**
+       * Opt-in: an extra looping, muted texture clip layered INTO the
+       * backdrop on top of the `.ambientFallback` blue glow gradient (or
+       * `video`, if also set) — see cinematic.module.css's `.cloudVideo`
+       * doc. Recolored blue via a CSS duotone filter and blended with
+       * `multiply` so only its darker cloud/fog shapes show, faded out
+       * toward the centre via a radial mask so it never muddies the
+       * panel area. Reference: Kilo's moody drifting-cloud backdrop,
+       * recreated here as real cloud texture instead of just soft gradient
+       * blobs, while keeping the scene in its off-white key (`pageBg`)
+       * rather than Kilo's own dark one. Omit to keep just the gradient
+       * glow (e.g. tempo, and onepercent before this was added).
+       */
+      cloudVideo?: { src: string; poster?: string };
+      /**
        * Opt-in two-panel layout: brand word + emblem on the left, boxed
        * sign-in panel on the right. Omit for the classic single centred
        * panel (e.g. tempo) — nothing changes there. See

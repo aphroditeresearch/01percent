@@ -61,6 +61,11 @@ export const onepercent: TenantConfig = {
     compactButton: true,
     // Kilo-style smaller, tighter sign-in card — see LoginConfig.compactPanel doc.
     compactPanel: true,
+    // Real drifting fog/cloud texture (source: a licensed Vecteezy rain/fog
+    // overlay clip), recoloured blue and blended on top of the
+    // .ambientFallback glow gradient — see LoginConfig.cloudVideo doc.
+    // Local file, muted, no controls, purely decorative.
+    cloudVideo: { src: "/tenants/onepercent/storm-clouds.mp4" },
     // No full-bleed ambient `video` here — the previous Sharingan YouTube
     // loop was dropped entirely. Omitting `video` falls back to
     // .ambientFallback (an animated gradient), which doesn't matter in
