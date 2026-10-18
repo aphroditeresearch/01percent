@@ -1,9 +1,9 @@
 import type { CSSProperties } from "react";
 import type { LoginConfig, TenantConfig } from "@/config/tenants";
 import { enterDemo } from "@/app/login/actions";
-import { PetalField } from "@/components/layout/petal-field";
 import { burstLines } from "@/lib/burst";
 import { cn } from "@/lib/cn";
+import { sakuraPetals } from "@/lib/petals";
 import { DISPLAY_FONT, isHexColor } from "@/lib/theme";
 import { AmbientAudio } from "./ambient-audio";
 import { AmbientVideo } from "./ambient-video";
@@ -13,6 +13,11 @@ import s from "./cinematic.module.css";
 type Cinematic = Extract<LoginConfig, { style: "cinematic" }>;
 
 const LINES = burstLines();
+
+// Different seed/count from the dashboard's sakuraPetals() call in
+// petal-field.tsx, so the two decorative layers don't read as visibly
+// identical if a user navigates straight from login into the member area.
+const AMBIENT_PETALS = sakuraPetals(22, 29);
 
 const STREAKS = [
   { left: "10%", top: "70%", delay: "2.4s" },
@@ -187,6 +192,23 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
         <div className={cn(s.shutter, s.shutterBottom)} />
         <div className={s.lines}>
           <div className={s.linesInner}>
+            {/* Opt-in (LoginConfig.dimensionalRays) — a pink echo of each ray,
+                rendered first (so it paints underneath the black ones below),
+                a touch longer/further-rotated so its edge peeks out past its
+                black counterpart. Same LINES data, just offset per-line. */}
+            {login.dimensionalRays &&
+              LINES.map((l, i) => (
+                <div
+                  key={i}
+                  className={s.linePink}
+                  style={{
+                    transform: `rotate(${l.angle + 1.6}deg) translateX(${l.offset + 10}px)`,
+                    width: l.length,
+                    height: l.thickness,
+                    opacity: l.opacity,
+                  }}
+                />
+              ))}
             {LINES.map((l, i) => (
               <div
                 key={i}
@@ -229,7 +251,25 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
         )}
         <div className={s.shade} />
         {login.ambientPetals ? (
-          <PetalField tenant={tenant} />
+          <div className={s.petalsLayer} aria-hidden>
+            {AMBIENT_PETALS.map((p, i) => (
+              <span
+                key={i}
+                className={s.petal}
+                style={
+                  {
+                    "--left": `${p.left}%`,
+                    "--size": `${p.size}px`,
+                    "--duration": `${p.duration}s`,
+                    "--delay": `${p.delay}s`,
+                    "--drift": `${p.drift}px`,
+                    "--rotate": `${p.rotate}deg`,
+                    "--opacity": p.opacity,
+                  } as CSSProperties
+                }
+              />
+            ))}
+          </div>
         ) : (
           <>
             <div className={cn(s.halftone, s.halftoneTopRight)} />
@@ -247,6 +287,7 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
 
       <header className={cn(s.header, s.e1)}>
         <span className={s.wordmark}>{tenant.wordmark}</span>
+        {login.wordmarkSuffix && <span className={s.wordmarkSuffix}>{login.wordmarkSuffix}</span>}
       </header>
 
       <main className={cn(s.main, login.split && s.mainSplit)}>

@@ -34,7 +34,11 @@
    no-op against the black .fieldVideo base behind it, so a clip authored
    as "bright content on a black background" (the common free-stock-video
    trick for a transparency-less "transparent" overlay) reads as just its
-   bright content floating on black, with no visible clip boundary/crop. */
+   bright content floating on black, with no visible clip boundary/crop.
+   Opacity < 1 blends the screened result back toward that same black base,
+   i.e. fades the clip rather than dimming it toward grey — keeps it a
+   quiet backdrop behind the page's actual content instead of competing
+   with it for attention. */
 .overlayVideo {
   position: absolute;
   inset: 0;
@@ -42,6 +46,7 @@
   height: 100%;
   object-fit: cover;
   mix-blend-mode: screen;
+  opacity: 0.6;
 }
 
 .glow {

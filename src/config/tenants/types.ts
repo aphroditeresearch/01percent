@@ -69,6 +69,14 @@ export type LoginConfig =
        * (wordmark matches `theme.displayFont` everywhere, e.g. tempo).
        */
       heroFont?: DisplayFont;
+      /**
+       * Opt-in: small companion text shown immediately after the header
+       * wordmark (top-left corner of the login scene only — not the intro
+       * burst title or the split-login hero word), in the same font family
+       * as the wordmark but at normal weight, e.g. "1%" + "by AM" reading
+       * as a byline. Omit to keep the classic bare wordmark (e.g. tempo).
+       */
+      wordmarkSuffix?: string;
       /** Small caps line shown during the intro. */
       introSubtitle: string;
       /** Second accent colour for streaks, #rrggbb. */
@@ -121,12 +129,26 @@ export type LoginConfig =
       ambientAudio?: { youtubeId: string; startSeconds?: number };
       /**
        * Opt-in: swap the default backdrop (halftone dots + flying light
-       * streaks) for the falling-sakura-petal field used on member pages
-       * (see components/layout/petal-field.tsx). Only takes effect when
-       * `home.style` is also "sakura" — PetalField itself is a no-op
-       * otherwise. Omit to keep the classic halftone/streak backdrop.
+       * streaks) for a falling sakura-petal layer, coloured via
+       * `streakColor` — see cinematic.module.css's `.petalsLayer` doc for
+       * why this is its own lightweight layer rather than reusing the
+       * shared PetalField component (components/layout/petal-field.tsx)
+       * used on member pages. Sits behind the intro burst, so the petals
+       * only become visible once it resolves. Omit to keep the classic
+       * halftone/streak backdrop.
        */
       ambientPetals?: boolean;
+      /**
+       * Opt-in: a second set of intro-burst rays in `streakColor`, rendered
+       * underneath the classic ones (same angles/lengths, slightly longer
+       * and rotated a hair further) so a thin pink edge peeks out past each
+       * black ray — reads as the burst having depth/dimension instead of a
+       * single flat ray colour. Keeps tempo.ts's launch sequence
+       * byte-for-byte unaffected (see cinematic-login.tsx's `LINES`/
+       * `PINK_LINES` — same deterministic burstLines() data, just rendered
+       * twice). Omit for the classic single-colour burst.
+       */
+      dimensionalRays?: boolean;
       /**
        * Opt-in: an extra looping, muted texture clip layered INTO the
        * backdrop on top of the `.ambientFallback` glow gradient (or

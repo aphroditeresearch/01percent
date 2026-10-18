@@ -91,6 +91,18 @@
   border-radius: 999px;
 }
 
+/* Opt-in (LoginConfig.dimensionalRays) — see cinematic-login.tsx's render
+   call: identical geometry to .line, just in --streak and painted first so
+   it sits underneath. */
+.linePink {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, transparent, var(--streak) 35%, var(--streak));
+  border-radius: 999px;
+}
+
 .flash {
   position: absolute;
   inset: 0;
@@ -313,6 +325,55 @@
   background: linear-gradient(90deg, transparent, var(--streak));
 }
 
+/* Opt-in (LoginConfig.ambientPetals) — a dedicated falling sakura-petal
+   layer for the login scene, used instead of the halftone/streak backdrop
+   above. Deliberately NOT the shared PetalField component
+   (components/layout/petal-field.tsx): that component's home.overlayVideo
+   branch renders an opaque black full-viewport base for the dashboard's
+   screen-blended dry-leaves clip, which would blot out this scene's own
+   white/pink backdrop. Same falling-petal math (see lib/petals.ts) and
+   near-identical styling, just scoped locally and coloured via --streak so
+   it matches the intro's own accent instead of a separate field. Sits
+   behind the intro burst's shutters/flash (z-index 50, see .intro), so it
+   only becomes visible once those resolve. */
+.petalsLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.petal {
+  position: absolute;
+  top: -8%;
+  left: var(--left);
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle at 35% 30%, var(--streak), transparent 72%);
+  border-radius: 70% 30% 70% 30% / 60% 40% 60% 40%;
+  opacity: var(--opacity);
+  animation: petalFall var(--duration) linear var(--delay) infinite;
+  will-change: transform;
+}
+
+@keyframes petalFall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(var(--rotate));
+  }
+  50% {
+    transform: translate3d(var(--drift), 55vh, 0) rotate(calc(var(--rotate) + 180deg));
+  }
+  100% {
+    transform: translate3d(0, 120vh, 0) rotate(calc(var(--rotate) + 360deg));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petal {
+    display: none;
+  }
+}
+
 /* ───────── Page ───────── */
 
 .header {
@@ -335,6 +396,22 @@
      needs to track --page-ink explicitly rather than relying on .root's
      inherited colour — fallback matches that inherited value exactly. */
   color: var(--page-ink, var(--t-ink));
+}
+
+/* Opt-in (LoginConfig.wordmarkSuffix) — companion byline right after the
+   wordmark, e.g. "1%" + "by AM". Same family/stretch as .wordmark so it
+   reads as a deliberate pairing, just normal weight instead of the
+   wordmark's display weight, and a little dimmer/smaller to stay secondary. */
+.wordmarkSuffix {
+  font-family: var(--hero-font-family, var(--font-display));
+  font-stretch: var(--hero-font-stretch, var(--t-display-stretch));
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  margin-left: 0.4em;
+  color: var(--page-ink, var(--t-ink));
+  opacity: 0.6;
 }
 
 .main {

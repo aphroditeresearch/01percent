@@ -16,9 +16,11 @@ import type { TenantConfig } from "./types";
  * No `introVideo` here, same as tempo.ts — that would be a separate
  * full-screen video pre-roll layered on top of the cinematic login's own
  * intro burst, which reads as a muddled double-intro / cross-fade.
- * Omitting it keeps this tenant's launch sequence byte-for-byte the same
- * code as tempo.ts (rays, camera-shake, shutter slash) — see
- * cinematic.module.css's `.intro`.
+ * Omitting it keeps this tenant on the same shared intro mechanics as
+ * tempo.ts (camera-shake, shutter slash) — see cinematic.module.css's
+ * `.intro`. The burst rays themselves now diverge via `dimensionalRays`
+ * (a second pink layer underneath the classic ones, this tenant only —
+ * tempo stays on the classic single-colour burst).
  */
 export const onepercent: TenantConfig = {
   id: "tnt_onepercent",
@@ -48,8 +50,12 @@ export const onepercent: TenantConfig = {
   login: {
     style: "cinematic",
     heroWord: "1%",
+    wordmarkSuffix: "by AM",
     introSubtitle: "Private mentorship",
     streakColor: "#ff8aa8",
+    // Pink echo rays underneath the classic black burst — see
+    // LoginConfig.dimensionalRays doc. Keeps tempo.ts's intro untouched.
+    dimensionalRays: true,
     // White sakura scene in tempo's red/pink family (see file doc above) —
     // flips the intro rays to dark-on-light and the ambient backdrop to a
     // clean white, while the framed media card and sign-in panel below
@@ -61,21 +67,30 @@ export const onepercent: TenantConfig = {
     compactButton: true,
     // Kilo-style smaller, tighter sign-in card — see LoginConfig.compactPanel doc.
     compactPanel: true,
-    // Real drifting fog/cloud texture (source: a licensed Vecteezy rain/fog
-    // overlay clip), recoloured pinkish-red via cloudHue below and blended
-    // on top of the .ambientFallback glow gradient — see
-    // LoginConfig.cloudVideo doc. Local file, muted, no controls, purely
-    // decorative.
-    cloudVideo: { src: "/tenants/onepercent/storm-clouds.mp4" },
+    // "Raining petals" texture (a licensed Vecteezy dry-leaves/petals clip,
+    // the same footage as home.overlayVideo below) layered on top of the
+    // .ambientFallback glow gradient via the cloudVideo duotone+multiply
+    // treatment — see LoginConfig.cloudVideo doc. Replaces the earlier blue
+    // storm-cloud rain texture entirely: same mechanism, different clip, so
+    // it reads as drifting pink petals instead of rain streaks. Moved here
+    // (the opening screen) per the brand's direction — the blooming-tree
+    // clip belongs behind the member-area content instead, see
+    // `home.overlayVideo` below.
+    cloudVideo: { src: "/tenants/onepercent/leaves-overlay.mp4" },
     // Lands the duotone recolour on a sakura red/pink instead of the
     // default blue — see LoginConfig.cloudHue doc.
     cloudHue: 330,
-    // No full-bleed ambient `video` here — the previous Sharingan YouTube
-    // loop was dropped entirely. Omitting `video` falls back to
-    // .ambientFallback (an animated gradient), which doesn't matter in
-    // practice while `split` (below) is set, since SplitPanels' own media
-    // frame is what actually renders on the left.
+    // No full-bleed ambient `video` here — the cloudVideo texture above
+    // plus the falling-petal layer below (LoginConfig.ambientPetals) are
+    // the login's whole sakura treatment; a third full-bleed clip on top
+    // would be too busy for the sign-in panel to stay legible. Omitting
+    // `video` falls back to .ambientFallback (the pink-tuned gradient glow).
     //
+    // Falling sakura-petal layer (see LoginConfig.ambientPetals doc) instead
+    // of the classic halftone-dots + light-streak decoration — sits behind
+    // the intro burst's shutters/flash (z-index 50) so it only becomes
+    // visible once those resolve, i.e. "after the 1% popout".
+    ambientPetals: true,
     // Two-panel split login (see LoginConfig.split doc). `media.src` points
     // at a placeholder path — /assets/hero-bg.mp4 does not exist in the
     // repo yet. This is intentional: the user is sourcing a properly
@@ -92,10 +107,11 @@ export const onepercent: TenantConfig = {
   },
   memberLayout: "sidebar",
   // Member area (behind Home's modules, Library, Lessons, Homework,
-  // Journal, Booking, Account): flat black backdrop with a looping
-  // dry-leaves clip screen-blended on top instead of tempo's drifting
-  // sakura petals — see HomeConfig.overlayVideo doc.
-  home: { style: "sakura", petalColor: "#ff8aa8", overlayVideo: { src: "/tenants/onepercent/leaves-overlay.mp4" } },
+  // Journal, Booking, Account): flat black backdrop with a looping,
+  // faded blooming-sakura-tree clip screen-blended on top instead of
+  // tempo's drifting CSS sakura petals — see HomeConfig.overlayVideo doc
+  // and petal-field.module.css's `.overlayVideo` (opacity) doc.
+  home: { style: "sakura", petalColor: "#ff8aa8", overlayVideo: { src: "/tenants/onepercent/sakura-tree.mp4" } },
   features: {
     courses: true,
     announcements: true,
