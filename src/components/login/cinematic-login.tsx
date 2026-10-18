@@ -154,6 +154,13 @@ export function CinematicLogin({ tenant, login }: { tenant: TenantConfig; login:
       "--hero-font-weight": heroFont.weight,
       "--hero-font-stretch": heroFont.stretch,
     }),
+    // Opt-in scene-local backdrop/foreground override — see LoginConfig.pageBg
+    // doc. Only set the custom property when the tenant supplies a valid hex;
+    // every cinematic.module.css rule that uses it falls back to the classic
+    // near-black/near-white literal via var(--page-bg, <literal>), so a
+    // tenant that never sets this (e.g. tempo) renders byte-for-byte the same.
+    ...(login.pageBg && isHexColor(login.pageBg) && { "--page-bg": login.pageBg }),
+    ...(login.pageInk && isHexColor(login.pageInk) && { "--page-ink": login.pageInk }),
   } as CSSProperties;
 
   return (

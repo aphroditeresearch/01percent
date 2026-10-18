@@ -6,6 +6,13 @@
  * page elements stagger in. Retime the whole thing by editing --hold-end
  * and --cut-duration on .root — nothing else needs to change.
  * Colours come from tenant tokens (--t-*) plus --streak set on .root.
+ * Optional --page-bg/--page-ink (see LoginConfig.pageBg doc) repaint the
+ * scene's own backdrop/foreground only — every rule below that uses them
+ * falls back to the original literal via var(--page-bg, <literal>), so a
+ * tenant that never sets them renders identically to before. The framed
+ * media card and the sign-in panel deliberately stay on their own dark
+ * surface regardless (see .splitMediaFrame/.panel) — only the ambient
+ * backdrop, intro shutters/rays and header wordmark track the override.
  */
 
 .root {
@@ -19,7 +26,7 @@
   flex-direction: column;
   min-height: 100dvh;
   overflow: hidden;
-  background: #000;
+  background: var(--page-bg, #000);
   color: var(--t-ink);
 }
 
@@ -42,7 +49,7 @@
   left: 0;
   right: 0;
   height: 50.5%;
-  background: #050506;
+  background: var(--page-bg, #050506);
   animation: var(--cut-duration) cubic-bezier(0.7, 0, 0.2, 1) var(--hold-end) forwards;
 }
 .shutterTop {
@@ -76,14 +83,18 @@
   left: 0;
   top: 0;
   transform-origin: 0 50%;
-  background: linear-gradient(90deg, transparent, var(--t-ink) 35%, var(--t-ink));
+  /* Ray colour: defaults to the global ink token (near-white on the
+     classic near-black shutter); tracks --page-ink when a tenant flips
+     the scene light, so the burst reads as dark rays on a light shutter
+     instead of white-on-white. */
+  background: linear-gradient(90deg, transparent, var(--page-ink, var(--t-ink)) 35%, var(--page-ink, var(--t-ink)));
   border-radius: 999px;
 }
 
 .flash {
   position: absolute;
   inset: 0;
-  background: var(--t-ink);
+  background: var(--page-ink, var(--t-ink));
   opacity: 0;
   animation: flash 0.35s ease-out 0.12s;
 }
@@ -116,7 +127,7 @@
   font-size: clamp(4rem, 14vw, 11rem);
   line-height: 0.85;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--page-ink, #fff);
   text-shadow:
     0.008em 0.008em 0 var(--t-accent),
     0.016em 0.016em 0 var(--t-accent),
@@ -156,7 +167,7 @@
   right: 0;
   height: 2px;
   margin-top: -1px;
-  background: var(--t-ink);
+  background: var(--page-ink, var(--t-ink));
   transform: scaleX(0);
   animation:
     seam 0.3s cubic-bezier(0.7, 0, 0.2, 1) calc(var(--hold-end) - 0.3s) forwards,
@@ -194,10 +205,17 @@
   height: 100%;
   object-fit: cover;
   opacity: 1;
+  /* The centre/edge stops of the base radial both read the SAME
+     --page-bg var, just with different literal fallbacks: when unset
+     (classic tenants) each falls back independently to its own literal,
+     exactly preserving the original two-tone dark vignette; when a
+     tenant sets --page-bg (onepercent), both stops collapse to that one
+     flat colour, so the blue-tinted glows above sit on a clean, even
+     off-white field instead of carrying over a dark-mode vignette. */
   background:
     radial-gradient(40% 50% at 20% 30%, color-mix(in srgb, var(--streak) 28%, transparent), transparent 70%),
     radial-gradient(35% 45% at 80% 70%, color-mix(in srgb, var(--t-accent) 22%, transparent), transparent 70%),
-    radial-gradient(60% 60% at 50% 50%, #15161b, #050506);
+    radial-gradient(60% 60% at 50% 50%, var(--page-bg, #15161b), var(--page-bg, #050506));
   background-size: 160% 160%, 160% 160%, 100% 100%;
   animation: drift 18s ease-in-out infinite alternate;
 }
@@ -205,9 +223,21 @@
 .shade {
   position: absolute;
   inset: 0;
+  /* Tints from --page-ink instead of a flat literal black so the vignette
+     stays coherent when a tenant flips the scene light (onepercent's
+     near-black-navy ink), at lower fixed percentages than a true "darken
+     for video contrast" treatment needs — there's no ambient video behind
+     a light scene competing for legibility, just a soft depth cue. On the
+     classic dark tenants (fallback to literal #000/#fff) the difference
+     is imperceptible since it's dark-on-near-black either way. */
   background:
-    linear-gradient(180deg, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.15) 40%, rgb(0 0 0 / 0.7)),
-    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.015) 0 1px, transparent 1px 3px);
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--page-ink, #000) 20%, transparent),
+      color-mix(in srgb, var(--page-ink, #000) 6%, transparent) 40%,
+      color-mix(in srgb, var(--page-ink, #000) 32%, transparent)
+    ),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--page-ink, #fff) 1.5%, transparent) 0 1px, transparent 1px 3px);
 }
 
 /* Halftone dot corners. */
@@ -215,7 +245,7 @@
   position: absolute;
   width: min(42vw, 520px);
   aspect-ratio: 1;
-  background-image: radial-gradient(circle, rgb(255 255 255 / 0.22) 1.2px, transparent 1.6px);
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--page-ink, #fff) 22%, transparent) 1.2px, transparent 1.6px);
   background-size: 9px 9px;
   opacity: 0.7;
 }
@@ -235,7 +265,7 @@
   width: 260px;
   height: 2px;
   border-radius: 999px;
-  background: linear-gradient(90deg, transparent, var(--t-ink));
+  background: linear-gradient(90deg, transparent, var(--page-ink, var(--t-ink)));
   opacity: 0;
   transform: rotate(-18deg);
   animation: streak 9s linear infinite;
@@ -262,6 +292,10 @@
   font-size: 1.25rem;
   letter-spacing: 0.02em;
   text-transform: lowercase;
+  /* Sits directly on the fixed ambient backdrop (not inside a card), so it
+     needs to track --page-ink explicitly rather than relying on .root's
+     inherited colour — fallback matches that inherited value exactly. */
+  color: var(--page-ink, var(--t-ink));
 }
 
 .main {
@@ -360,7 +394,7 @@
   flex-direction: column;
   border-radius: 1.25rem;
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.08);
+  border: 1px solid color-mix(in srgb, var(--page-ink, #fff) 8%, transparent);
   box-shadow: 0 50px 140px -40px rgb(0 0 0 / 0.85);
 }
 @media (min-width: 768px) {
@@ -543,7 +577,7 @@
   aspect-ratio: 16 / 11;
   overflow: hidden;
   border-radius: 0.75rem;
-  border: 1px solid rgb(255 255 255 / 0.14);
+  border: 1px solid color-mix(in srgb, var(--page-ink, #fff) 14%, transparent);
   box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.7);
 }
 /* Bottom scrim inside the frame so the overlapping hero word (see

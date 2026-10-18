@@ -74,6 +74,21 @@ export type LoginConfig =
       /** Second accent colour for streaks, #rrggbb. */
       streakColor: string;
       /**
+       * Opt-in overrides for the cinematic scene's OWN backdrop/foreground
+       * colours, #rrggbb (validated like `streakColor`). Distinct from
+       * `TenantTheme.bg`/`.ink`, which still govern the rest of the app
+       * (member dashboard, etc.) — these two only repaint the login scene
+       * itself: intro shutters + burst rays, the ambient backdrop and its
+       * halftone/streak decoration, and the header wordmark. The framed
+       * media card (`split.media`) and the sign-in panel stay on their own
+       * dark surface either way, so a tenant can run a light, "offwhite"
+       * sign-in scene around a dark card/panel without needing to relight
+       * the whole app. Omit either/both to keep the classic near-black
+       * backdrop / near-white foreground (e.g. tempo).
+       */
+      pageBg?: string;
+      pageInk?: string;
+      /**
        * Full-bleed looping background clip behind the whole login scene.
        * Either a self-hosted file in /public (plain `<video>`, see
        * ambient-video.tsx) or a YouTube embed (IFrame Player API, see

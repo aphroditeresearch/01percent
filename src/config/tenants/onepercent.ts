@@ -49,6 +49,13 @@ export const onepercent: TenantConfig = {
     heroWord: "1%",
     introSubtitle: "Private mentorship",
     streakColor: "#6aa1ff",
+    // Offwhite-with-a-blue-hue scene (client reference: Kilo's blue accent
+    // family, but on a light backdrop instead of Kilo's own dark one) —
+    // flips the intro rays to dark-on-light and the ambient backdrop to a
+    // clean off-white, while the framed media card and sign-in panel below
+    // stay on their own dark surface (see LoginConfig.pageBg doc).
+    pageBg: "#f4f6fb",
+    pageInk: "#11131c",
     // No full-bleed ambient `video` here — the previous Sharingan YouTube
     // loop was dropped entirely. Omitting `video` falls back to
     // .ambientFallback (an animated gradient), which doesn't matter in
